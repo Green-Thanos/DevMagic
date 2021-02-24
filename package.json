@@ -1,0 +1,107 @@
+{
+  "name": "ghostybotv2",
+  "version": "1.0.0",
+  "description": "A Custom Discord bot with a lot of commands for Discord communities.",
+  "main": "src/index.ts",
+  "engines": {
+    "node": "14.15.3",
+    "npm": "7.5.4",
+    "yarn": "1.22.5"
+  },
+  "scripts": {
+    "format": "eslint --ext .ts --fix",
+    "start": "ts-node src/index.ts",
+    "dev": "nodemon src/index.ts",
+    "build": "next build"
+  },
+  "lint-staged": {
+    "./src/**/*.+(ts)": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dev-CasperTheGhost/ghostybot"
+  },
+  "bugs": {
+    "url": "https://github.com/Dev-CasperTheGhost/ghostybot/issues",
+    "email": "casper.iversen2@gmail.com"
+  },
+  "homepage": "https://github.com/Dev-CasperTheGhost/ghostybot#readme",
+  "keywords": [
+    "discord-bot",
+    "discord.js",
+    "discord-js"
+  ],
+  "author": "Dev-CasperTheGhost",
+  "license": "MIT",
+  "dependencies": {
+    "@discordjs/opus": "^0.4.0",
+    "@k3rn31p4nic/google-translate-api": "^1.1.1",
+    "alexflipnote.js": "^2.3.6",
+    "chalk": "^4.1.0",
+    "cows": "^2.1.1",
+    "cowsay": "^1.1.1",
+    "discord-giveaways": "^4.4.3",
+    "discord-logs": "^1.9.0",
+    "discord-player": "3.3.2",
+    "discord-starboards": "2.2.1",
+    "discord.js": "github:discordjs/discord.js#master",
+    "dotenv": "^8.2.0",
+    "easy-games-js": "^1.2.1",
+    "eslint-plugin-react": "^7.22.0",
+    "ffmpeg": "0.0.4",
+    "figlet": "^1.5.0",
+    "glob": "^7.1.6",
+    "google-play-scraper": "^8.0.2",
+    "hastebin-gen": "^2.0.5",
+    "image-gen-discord": "^1.0.2",
+    "imdb-api": "^4.4.1",
+    "jsonwebtoken": "^8.5.1",
+    "lyrics-finder": "^21.7.0",
+    "mathjs": "^9.2.0",
+    "moment": "^2.29.1",
+    "moment-duration-format": "^2.3.2",
+    "moment-timezone": "^0.5.33",
+    "mongoose": "^5.11.15",
+    "ms": "^2.1.3",
+    "nekos.life": "^2.0.7",
+    "next": "^10.0.7",
+    "node-fetch": "^2.6.1",
+    "nodemon": "^2.0.7",
+    "nookies": "^2.5.2",
+    "nprogress": "^0.2.0",
+    "one-liner-joke": "^1.2.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "twemoji-parser": "^13.0.0",
+    "typescript": "^4.1.5",
+    "uuid": "^8.3.2",
+    "wikijs": "^6.0.1",
+    "word-definition": "^2.1.6"
+  },
+  "devDependencies": {
+    "@types/cheerio": "^0.22.24",
+    "@types/figlet": "^1.2.1",
+    "@types/glob": "^7.1.3",
+    "@types/jsonwebtoken": "^8.5.0",
+    "@types/mathjs": "^6.0.11",
+    "@types/mongoose": "^5.10.3",
+    "@types/ms": "^0.7.31",
+    "@types/node": "^14.14.30",
+    "@types/node-fetch": "^2.5.8",
+    "@types/nprogress": "^0.2.0",
+    "@types/react": "^17.0.2",
+    "@types/request": "^2.48.5",
+    "@types/twemoji-parser": "^12.1.0",
+    "@types/uuid": "^8.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.15.1",
+    "@typescript-eslint/parser": "^4.15.1",
+    "eslint": "^7.20.0",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "husky": "^5.0.9",
+    "lint-staged": "^10.5.4"
+  }
+}
