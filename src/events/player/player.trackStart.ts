@@ -19,7 +19,10 @@ export default class PlayerTrackStarEvent extends Event {
         .setAuthor(`${lang.MUSIC.REQUESTED_BY} ${track.requestedBy.username}`)
         .setImage(track.thumbnail);
   
-      return message.channel.send(embed);
+      const msg = await message.channel.send(embed);
+      setTimeout(() => {
+        msg?.delete();
+      }, track.durationMS);
     } catch (err) {
       bot.utils.sendErrorLog(err, "error");
     }
