@@ -136,7 +136,10 @@ export default class MessageEvent extends Event {
               .addField(lang.LEVELS.NEW_LEVEL, newLevel)
               .addField(lang.LEVELS.TOTAL_XP, user.xp + xp);
 
-            const msg = await message.channel.send(embed);
+            const ch = message.channel;
+            if (!ch.permissionsFor(message.guild.me).has(["SEND_MESSAGES", "EMBED_LINKS"])) return;
+
+            const msg = await ch.send(embed);
             if (!msg) return;
 
             setTimeout(() => {
@@ -169,7 +172,7 @@ export default class MessageEvent extends Event {
           .setTitle("Quick Info")
           .addField(lang.GUILD.PREFIX, guild?.prefix)
           .addField(lang.MESSAGE.SUPPORT, "https://discord.gg/XxHrtkA")
-          .addField(lang.BOT.DASHBOARD, bot.config.dashboard.dashboardUrl);
+          .addField(lang.BOT.DASHBOARD, process.env["NEXT_PUBLIC_DASHBOARD_URL"]);
 
         return message.channel.send({ embed });
       }
@@ -220,7 +223,8 @@ export default class MessageEvent extends Event {
         return message.channel.send(lang.MESSAGE.COMMAND_DISABLED);
       }
 
-      if (command.options.ownerOnly && !bot.config.owners.includes(message.author.id)) {
+      const owners = process.env["OWNERS"];
+      if (command.options.ownerOnly && !owners.includes(message.author.id)) {
         return message.reply(lang.MESSAGE.OWNER_ONLY);
       }
 

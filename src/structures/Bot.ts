@@ -1,6 +1,7 @@
 import { Client, Collection } from "discord.js";
 import NekoClient from "nekos.life";
 import { Client as ImdbClient } from "imdb-api";
+import PasteClient from "pastebin-api";
 import AlexClient from "alexflipnote.js";
 import { Player } from "discord-player";
 import CommandHandler from "../modules/CommandHandler";
@@ -11,7 +12,6 @@ import MongoGiveawayManager from "../modules/GiveawayManager";
 import Command from "./Command";
 import Logger from "../modules/Logger";
 import Util from "../utils/Util";
-import config from "../../config.json";
 
 class Bot extends Client {
   commands: Collection<string, Command>;
@@ -19,13 +19,13 @@ class Bot extends Client {
   cooldowns: Collection<string, Collection<string, number>>;
   logger: typeof Logger;
   utils: Util;
-  config: typeof config;
   neko: NekoClient;
   imdb: ImdbClient;
   alexClient: AlexClient;
   player: Player;
   starboardsManager: MongStarboardsManager;
   giveawayManager: MongoGiveawayManager;
+  pasteClient: PasteClient;
 
   constructor() {
     super({
@@ -51,10 +51,10 @@ class Bot extends Client {
     this.cooldowns = new Collection();
     this.logger = Logger;
     this.utils = new Util(this);
-    this.config = config;
     this.neko = new NekoClient();
-    this.imdb = new ImdbClient({ apiKey: this.config.imdbKey });
-    this.alexClient = new AlexClient(this.config.alexflipnoteKey);
+    this.imdb = new ImdbClient({ apiKey: process.env["IMDB_KEY"] });
+    this.alexClient = new AlexClient(process.env["ALEXFLIPNOTE_API_KEY"]);
+    this.pasteClient = new PasteClient(process.env["PASTE_CLIENT_KEY"]);
     this.player = new Player(this, {
       autoSelfDeaf: true,
       leaveOnEmpty: true,
@@ -64,10 +64,12 @@ class Bot extends Client {
     });
     this.starboardsManager = new MongStarboardsManager(this, {
       storage: false,
+      // translateClickHere: "Jump to message",
     });
     this.giveawayManager = new MongoGiveawayManager(this, {
       hasGuildMembersIntent: true,
       updateCountdownEvery: 10000,
+
       default: {
         embedColor: "#7289DA",
         botsCanWin: false,

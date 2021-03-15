@@ -19,12 +19,13 @@ export default class ReadyEvent extends Event {
       ` ${serverCount} servers.`,
       `!help || ${channelCount} channels`,
       `${userCount} users`,
+      "!help | https://ghostybot.tk",
     ];
 
     new HelperHandler(bot).loadHelpers();
     new FeatureHandler(bot).loadFeatures();
 
-    if (bot.config.dev === true) {
+    if (process.env["DEV_MODE"] === true) {
       import("../../scripts/generateCommandList").then((v) => v.default(bot));
     }
 

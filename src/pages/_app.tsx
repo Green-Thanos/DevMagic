@@ -11,21 +11,20 @@ import "../dashboard/css/modal.css";
 import "../dashboard/css/landing.css";
 import "../dashboard/css/footer.css";
 import "../dashboard/css/switch.css";
+import "../dashboard/css/nprogress.css";
 import Navbar from "../dashboard/components/Navbar";
 import Footer from "../dashboard/components/Footer";
-import { dashboard } from "../../config.json";
 import Loader from "../dashboard/components/Loader";
 
 const paths = ["/error", "/"];
 
 Router.events.on("routeChangeStart", () => {
   NProgress.start();
-  
 });
 Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
-function Bot({ Component, pageProps }: AppProps) {
+function GhostyBot({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -42,21 +41,7 @@ function Bot({ Component, pageProps }: AppProps) {
       {paths.includes(router.pathname) ? null : <Navbar />}
       <div className="container">
         <Head>
-          <title>{dashboard.botName}</title>
-          <meta
-            name="description"
-            content={`🤖 ${dashboard.botName} is a Custom Discord bot with a lot of commands for Discord communities. (+200 commands) Economy, util, fun, music, admin, xp system and more `}
-          />
-          <link rel="apple-touch-icon" sizes="144x144" href="/favicons/apple-touch-icon.png" />
-          <meta property="og:image" content="/favicons/apple-touch-icon.png" />
-          <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png" />
-          <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
-          <link rel="manifest" href="/manifest.json" />
-          <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#5bbad5" />
-          <meta name="msapplication-TileColor" content="#da532c" />
-          <meta name="theme-color" content="#7289da" />
-          <meta property="og:color" content="#7289da" />
-          <link rel="stylesheet" type="text/css" href="/nprogress.css" />
+          <title>{process.env["NEXT_PUBLIC_DASHBOARD_BOTNAME"]} - A Discord bot</title>
         </Head>
         <div className="content">
           <Component {...pageProps} />
@@ -67,4 +52,4 @@ function Bot({ Component, pageProps }: AppProps) {
   );
 }
 
-export default Bot;
+export default GhostyBot;

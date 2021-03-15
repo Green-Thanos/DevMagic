@@ -1,20 +1,21 @@
 import { parseCookies } from "nookies";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import { GetServerSideProps } from "next";
+import Link from "next/link";
 import { useState, useEffect, useRef, useCallback, FC } from "react";
 import fetch from "node-fetch";
-import { dashboard } from "../../../../config.json";
 import AlertMessage from "../../../dashboard/components/AlertMessage";
 import Guild from "../../../interfaces/Guild";
-import { GetServerSideProps } from "next";
 
 interface Props {
   guild: Guild;
   isAuth: boolean;
   botCommands: string[];
+  error: string | undefined
 }
 
-const ManageCommands: FC<Props> = ({ botCommands, guild, isAuth }: Props) => {
+const ManageCommands: FC<Props> = ({ botCommands, guild, isAuth, error }: Props) => {
   const router = useRouter();
   const [message, setMessage] = useState<string | null>(null);
   const [filtered, setFiltered] = useState(botCommands);
@@ -27,7 +28,7 @@ const ManageCommands: FC<Props> = ({ botCommands, guild, isAuth }: Props) => {
     }
   }, [router, isAuth]);
 
-  const observer = useRef<any>();
+  const observer = useRef<IntersectionObserver>();
   const lastRef = useCallback(
     (node) => {
       if (length > botCommands.length) return;
@@ -67,7 +68,7 @@ const ManageCommands: FC<Props> = ({ botCommands, guild, isAuth }: Props) => {
 
   async function updateCommand(type: string, cmdName: string) {
     const data = await (
-      await fetch(`${dashboard.dashboardUrl}/api/guilds/${guild.id}/commands`, {
+      await fetch(`${process.env["NEXT_PUBLIC_DASHBOARD_URL"]}/api/guilds/${guild.id}/commands`, {
         method: "PUT",
         body: JSON.stringify({
           name: cmdName,
@@ -85,19 +86,25 @@ const ManageCommands: FC<Props> = ({ botCommands, guild, isAuth }: Props) => {
     }
   }
 
+  if (error) {
+    return <AlertMessage type="error" message={error} />;
+  }
+
   return (
     <>
       <Head>
-        <title>Manage commands - {dashboard.botName}</title>
+        <title>Manage commands - {process.env["NEXT_PUBLIC_DASHBOARD_BOTNAME"]}</title>
       </Head>
       {message ? <AlertMessage type="success" message={message} /> : null}
       <div className="page-title">
         <h4>{guild?.name} - Enable/disable commands</h4>
 
         <div>
-          <a className="btn btn-primary" href={`/dashboard/${guild.id}`}>
-            Return
-          </a>
+          <Link href={`/dashboard/${guild.id}`}>
+            <a href={`/dashboard/${guild.id}`} className="btn btn-primary">
+              Return
+            </a>
+          </Link>
         </div>
       </div>
 
@@ -143,7 +150,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const cookies = parseCookies(ctx);
 
   const data = await (
-    await fetch(`${dashboard.dashboardUrl}/api/guilds/${ctx.query.id}`, {
+    await fetch(`${process.env["NEXT_PUBLIC_DASHBOARD_URL"]}/api/guilds/${ctx.query.id}`, {
       headers: {
         auth: cookies?.token,
       },
@@ -155,6 +162,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       isAuth: data.error !== "invalid_token",
       guild: data?.guild || {},
       botCommands: data.botCommands || [],
+      error: data?.error || null,
     },
   };
 };

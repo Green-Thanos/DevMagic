@@ -10,7 +10,6 @@ export default class GuildMemberAddEvent extends Event {
   async execute(bot: Bot, member: GuildMember) {
     try {
       if (!member.guild) return;
-      if (member.pending) return;
       if (!member.guild.available) return;
       const guild = await bot.utils.getGuildById(member.guild.id);
       const welcomeData = guild?.welcome_data;
@@ -42,6 +41,11 @@ export default class GuildMemberAddEvent extends Event {
         const ch = bot.channels.cache.get(welcomeData.channel_id);
         if (!ch) return;
         (ch as TextChannel).send(embed);
+      }
+
+      if (!member.pending && welcomeData.role_id) {
+        if (!member.guild.me?.permissions.has("MANAGE_ROLES")) return;
+        member.roles.add(welcomeData.role_id);
       }
     } catch (err) {
       bot.utils.sendErrorLog(err, "error");

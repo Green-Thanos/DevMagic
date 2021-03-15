@@ -153,7 +153,6 @@ export default {
     NO_PREV_QUEUE: "No previous track was found",
     QUEUE_CLEARED: "The queue was cleared",
     QUEUE: "Music Queue",
-    PAGE: "Page",
     BETWEEN_0_100: "Volume must be between 0 and 100",
     BETWEEN_1_TOTALQUEUE: "Use a track number between 1 and {totalQueue}",
     REMOVE_SUCCESS: "has been removed from the queue",
@@ -377,6 +376,8 @@ export default {
     WEB_NSFW: "Cannot display this site in a non-NSFW channel",
     WEB_UNAVAILABLE: "This site seems to be unavailable",
     IP_NOT_FOUND: "No results were found",
+    VERIFY_CHANNEL: "Verification channel is: {channel}",
+    VERIFY_NOT_ENABLED: "Verification is not enabled for this guild"
   },
   BOT: {
     GUILDS: "Guilds",
@@ -439,6 +440,9 @@ export default {
       custom: "Custom commands",
       ticket: "Ticket commands",
     },
+  },
+  NASANEWS: {
+    NOT_FOUND: "No fact was found with {query}."
   },
   POKEMON: {
     SPECIES: "Species",

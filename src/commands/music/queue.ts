@@ -1,6 +1,6 @@
 import Command from "../../structures/Command";
 import Bot from "../../structures/Bot";
-import { Message } from "discord.js";
+import { Message, MessageEmbed } from "discord.js";
 
 export default class QueueCommand extends Command {
   constructor(bot: Bot) {
@@ -14,29 +14,30 @@ export default class QueueCommand extends Command {
   async execute(bot: Bot, message: Message) {
     const lang = await bot.utils.getGuildLang(message.guild?.id);
 
-    try {
-      function generateQueueEmbed(message, queue) {
-        let embeds: any = [];
-        let k = 10;
-
-        for (let i = 0; i < queue.length; i += 10) {
-          const current = queue.slice(i, k);
-          let j = i;
-          k += 10;
-
-          const info = current.map((track) => `${++j} - [${track.title}](${track.url})`).join("\n");
-
-          const embed = bot.utils
-            .baseEmbed(message)
-            .setTitle(lang.MUSIC.QUEUE)
-            .setThumbnail(message.guild.iconURL())
-            .setTimestamp()
-            .setDescription(`**${lang.MUSIC.PLAYING} - [${queue[0].title}](${queue[0].url})**\n\n${info}`);
-          embeds.push(embed);
-        }
-
-        return embeds;
+    function generateQueueEmbed(message, queue) {
+      const embeds : MessageEmbed[] = [];
+      let k = 10;
+    
+      for (let i = 0; i < queue.length; i += 10) {
+        const current = queue.slice(i, k);
+        let j = i;
+        k += 10;
+    
+        const info = current.map((track) => `${++j} - [${track.title}](${track.url})`).join("\n");
+    
+        const embed = bot.utils
+          .baseEmbed(message)
+          .setTitle(lang.MUSIC.QUEUE)
+          .setThumbnail(message.guild.iconURL())
+          .setTimestamp()
+          .setDescription(`**${lang.MUSIC.PLAYING} - [${queue[0].title}](${queue[0].url})**\n\n${info}`);
+        embeds.push(embed);
       }
+    
+      return embeds;
+    }
+
+    try {
       if (!message.member?.voice.channel) {
         return message.channel.send(lang.MUSIC.MUST_BE_IN_VC);
       }
@@ -50,7 +51,7 @@ export default class QueueCommand extends Command {
       const embeds = generateQueueEmbed(message, queue.tracks);
 
       const queueEmbed = await message.channel.send(
-        `**${lang.MUSIC.PAGE} - ${currentPage + 1}/${embeds.length}**`,
+        `**Page - ${currentPage + 1}/${embeds.length}**`,
         embeds[currentPage]
       );
 
@@ -67,17 +68,17 @@ export default class QueueCommand extends Command {
         ["⬅️", "⏹", "➡️"].includes(reaction.emoji.name) && message.author.id === user.id;
       const collector = queueEmbed.createReactionCollector(filter, { time: 60000 });
 
-      collector.on("collect", async (reaction, user) => {
+      collector.on("collect", async (reaction) => {
         try {
           if (reaction.emoji.name === "➡️") {
             if (currentPage < embeds.length - 1) {
               currentPage++;
-              queueEmbed.edit(`**${lang.MUSIC.PAGE} - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
+              queueEmbed.edit(`**Page - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
             }
           } else if (reaction.emoji.name === "⬅️") {
             if (currentPage !== 0) {
               --currentPage;
-              queueEmbed.edit(`**${lang.MUSIC.PAGE} - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
+              queueEmbed.edit(`**Page - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
             }
           } else {
             collector.stop();

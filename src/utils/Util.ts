@@ -163,9 +163,11 @@ export default class Util {
   }
 
   async sendErrorLog(error: ErrorLog, type: "warning" | "error"): Promise<void> {
-    if (error.stack?.includes("type: Value \"voice\" is not int.")) return;
+    /* eslint-disable-next-line */
+    if (error.stack?.includes('type: Value "voice" is not int.')) return;
+    if (error.stack?.includes("DeprecationWarning: Listening to events on the Db class")) return;
 
-    const channelId = this.bot.config.errorLogsChannelId;
+    const channelId = process.env["ERRORLOGS_CHANNEL_ID"];
     const channel = (this.bot.channels.cache.get(channelId) ||
       (await this.bot.channels.fetch(channelId))) as TextChannel;
 
@@ -275,14 +277,15 @@ export default class Util {
   }
 
   async getWebhook(guild: Guild): Promise<Webhook | undefined> {
+    if (!guild) return;
     if (!guild.me) return;
-    if (!guild.me?.permissions.has(["MANAGE_WEBHOOKS"])) return;
+    if (!guild.me.permissions.has("MANAGE_WEBHOOKS")) return undefined;
 
     const w = await guild.fetchWebhooks();
     const g = await this.getGuildById(guild.id);
-    if (!g) return;
+    if (!g) return undefined;
     const webhook = w.find((w) => w.name === `audit-logs-${g?.audit_channel}`);
-    if (!webhook) return;
+    if (!webhook) return undefined;
 
     return webhook;
   }
@@ -307,12 +310,10 @@ export default class Util {
     old: { channelID: string | undefined; emoji: string | undefined }
   ) {
     if (old) {
-      old.channelID &&
-        old.emoji &&
-        (this.bot.starboardsManager as any).delete(old.channelID, old.emoji);
+      old.channelID && old.emoji && this.bot.starboardsManager.delete(old.channelID, old.emoji);
     }
 
-    (this.bot.starboardsManager as any).create(channel as any, {
+    this.bot.starboardsManager.create(channel as any, {
       ...options,
       selfStar: true,
       starEmbed: true,
@@ -383,14 +384,14 @@ export default class Util {
     try {
       const bearer =
         tokenData.type === "Bearer"
-          ? jwt.verify(tokenData.data, this.bot.config.dashboard.jwtSecret)
+          ? jwt.verify(tokenData.data, process.env["DASHBOARD_JWT_SECRET"])
           : tokenData.data;
 
       if (!bearer) {
         return { error: "invalid_token" };
       }
 
-      const res = await fetch(`${this.bot.config.dashboard.discordApiUrl}${path}`, {
+      const res = await fetch(`${process.env["DASHBOARD_DISCORD_API_URL"]}${path}`, {
         method,
         headers: {
           Authorization: `${tokenData.type} ${bearer}`,
@@ -402,16 +403,32 @@ export default class Util {
     }
   }
 
-  async checkAuth(req: ApiRequest) {
+  async checkAuth(
+    req: ApiRequest,
+    admin?: {
+      guildId: string;
+    }
+  ) {
     const token = req.cookies.token || req.headers.auth;
-    const data = await this.handleApiRequest("/users/@me", {
+    const data: { error: string } | { id: string } = await this.handleApiRequest("/users/@me", {
       type: "Bearer",
       data: `${token}`,
     });
 
-    if (data.error) {
+    if ("error" in data) {
       return Promise.reject(data.error);
     } else {
+      if (admin?.guildId) {
+        const guild = this.bot.guilds.cache.get(admin.guildId);
+        if (!guild) return Promise.reject("Guild was not found");
+
+        const member = await guild.members.fetch(data.id);
+        if (!member) return Promise.reject("Not in this guild");
+
+        if (!member.permissions.has("ADMINISTRATOR")) {
+          return Promise.reject("Not an administrator for this guild");
+        }
+      }
       return Promise.resolve("Authorized");
     }
   }
@@ -484,7 +501,7 @@ export default class Util {
     return n.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
   }
 
-  encode(obj) {
+  encode(obj: { [key: string]: unknown }) {
     let string = "";
 
     for (const [key, value] of Object.entries(obj)) {

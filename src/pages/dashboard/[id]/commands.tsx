@@ -3,20 +3,22 @@ import { useRouter } from "next/router";
 import { useEffect, useState, FC } from "react";
 import Head from "next/head";
 import fetch from "node-fetch";
-import { dashboard } from "../../../../config.json";
+import { GetServerSideProps } from "next";
+import Link from "next/link";
 import Logger from "../../../modules/Logger";
 import { openModal } from "../../../dashboard/components/modal";
 import CreateCommandModal from "../../../dashboard/components/modal/create-command";
+import EditCommandModal from "../../../dashboard/components/modal/edit-command";
 import AlertMessage from "../../../dashboard/components/AlertMessage";
 import Guild from "../../../interfaces/Guild";
-import { GetServerSideProps } from "next";
 
 interface Props {
   guild: Guild;
   isAuth: boolean;
+  error: string | undefined;
 }
 
-const CustomCommands: FC<Props> = ({ guild, isAuth }: Props) => {
+const CustomCommands: FC<Props> = ({ guild, isAuth, error }: Props) => {
   const [message, setMessage] = useState<string | null>(null);
   const router = useRouter();
 
@@ -36,9 +38,9 @@ const CustomCommands: FC<Props> = ({ guild, isAuth }: Props) => {
     try {
       const data = await (
         await fetch(
-          `${dashboard.dashboardUrl}/api/guilds/${guild.id}/commands?name=${encodeURIComponent(
-            name
-          )}`,
+          `${process.env["NEXT_PUBLIC_DASHBOARD_URL"]}/api/guilds/${
+            guild.id
+          }/commands?name=${encodeURIComponent(name)}`,
           {
             method: "DELETE",
           }
@@ -59,20 +61,36 @@ const CustomCommands: FC<Props> = ({ guild, isAuth }: Props) => {
     openModal("createCommandModal");
   }
 
+  function handleEdit(name: string) {
+    router.push({
+      pathname: `/dashboard/${guild.guild_id}/commands`,
+      query: {
+        edit: name,
+      },
+    });
+  }
+
+  if (error) {
+    return <AlertMessage type="error" message={error} />;
+  }
+
   return (
     <>
       <Head>
-        <title>Manage custom commands - {dashboard.botName}</title>
+        <title>Manage custom commands - {process.env["NEXT_PUBLIC_DASHBOARD_BOTNAME"]}</title>
       </Head>
       {message ? <AlertMessage type="success" message={message} /> : null}
       <CreateCommandModal guild={guild} />
+      <EditCommandModal guild={guild} />
       <div className="page-title">
         <h4>{guild?.name} - Custom commands</h4>
 
         <div>
-          <a className="btn btn-primary" href={`/dashboard/${guild.id}`}>
-            Return
-          </a>
+          <Link href={`/dashboard/${guild.id}`}>
+            <a href={`/dashboard/${guild.id}`} className="btn btn-primary">
+              Return
+            </a>
+          </Link>
           <button className="btn btn-primary  ml-5" onClick={addCmd}>
             Add command
           </button>
@@ -98,6 +116,9 @@ const CustomCommands: FC<Props> = ({ guild, isAuth }: Props) => {
                     <button onClick={() => deleteCommand(cmd.name)} className="btn btn-sm btn-red">
                       Delete
                     </button>
+                    <button onClick={() => handleEdit(cmd.name)} className="btn btn-sm btn-green">
+                      Edit
+                    </button>
                   </td>
                 </tr>
               );
@@ -115,7 +136,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const cookies = parseCookies(ctx);
 
   const data = await (
-    await fetch(`${dashboard.dashboardUrl}/api/guilds/${ctx.query.id}`, {
+    await fetch(`${process.env["NEXT_PUBLIC_DASHBOARD_URL"]}/api/guilds/${ctx.query.id}`, {
       headers: {
         auth: cookies?.token,
       },
@@ -126,6 +147,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     props: {
       isAuth: data.error !== "invalid_token",
       guild: data?.guild || {},
+      error: data?.error || null,
     },
   };
 };

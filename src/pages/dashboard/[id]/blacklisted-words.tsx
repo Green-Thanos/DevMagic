@@ -2,20 +2,21 @@ import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import { useState, useEffect, FC } from "react";
 import Head from "next/head";
-import { dashboard } from "../../../../config.json";
+import { GetServerSideProps } from "next";
+import Link from "next/link";
 import AlertMessage from "../../../dashboard/components/AlertMessage";
 import { openModal } from "../../../dashboard/components/modal";
 import AddBlacklistedWord from "../../../dashboard/components/modal/add-blacklistedword";
 import Logger from "../../../modules/Logger";
 import Guild from "../../../interfaces/Guild";
-import { GetServerSideProps } from "next";
 
 interface Props {
   guild: Guild;
   isAuth: boolean;
+  error: string | undefined;
 }
 
-const BlacklistedWords: FC<Props> = ({ guild, isAuth }: Props) => {
+const BlacklistedWords: FC<Props> = ({ guild, isAuth, error }: Props) => {
   const [message, setMessage] = useState<string | null>(null);
   const router = useRouter();
 
@@ -35,7 +36,7 @@ const BlacklistedWords: FC<Props> = ({ guild, isAuth }: Props) => {
     try {
       const data = await (
         await fetch(
-          `${dashboard.dashboardUrl}/api/guilds/${
+          `${process.env["NEXT_PUBLIC_DASHBOARD_URL"]}/api/guilds/${
             guild.id
           }/blacklisted-words?word=${encodeURIComponent(word)}`,
           {
@@ -58,10 +59,14 @@ const BlacklistedWords: FC<Props> = ({ guild, isAuth }: Props) => {
     openModal("addBlacklistedWord");
   }
 
+  if (error) {
+    return <AlertMessage type="error" message={error} />;
+  }
+
   return (
     <>
       <Head>
-        <title>Manage blacklisted words - {dashboard.botName}</title>
+        <title>Manage blacklisted words - {process.env["NEXT_PUBLIC_DASHBOARD_BOTNAME"]}</title>
       </Head>
       {message ? <AlertMessage type="success" message={message} /> : null}
       <AddBlacklistedWord guild={guild} />
@@ -69,9 +74,11 @@ const BlacklistedWords: FC<Props> = ({ guild, isAuth }: Props) => {
         <h4>{guild?.name} - Blacklisted words</h4>
 
         <div>
-          <a className="btn btn-primary" href={`/dashboard/${guild.id}`}>
-            Return
-          </a>
+          <Link href={`/dashboard/${guild.id}`}>
+            <a href={`/dashboard/${guild.id}`} className="btn btn-primary">
+              Return
+            </a>
+          </Link>
           <button className="btn btn-primary ml-5" onClick={addWord}>
             Add word
           </button>
@@ -112,7 +119,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const cookies = parseCookies(ctx);
 
   const data = await (
-    await fetch(`${dashboard.dashboardUrl}/api/guilds/${ctx.query.id}`, {
+    await fetch(`${process.env["NEXT_PUBLIC_DASHBOARD_URL"]}/api/guilds/${ctx.query.id}`, {
       headers: {
         auth: cookies?.token,
       },
@@ -123,6 +130,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     props: {
       isAuth: data.error !== "invalid_token",
       guild: data?.guild || {},
+      error: data?.error || null,
     },
   };
 };

@@ -2,17 +2,18 @@ import { useRouter } from "next/router";
 import { FC, useEffect } from "react";
 import { parseCookies } from "nookies";
 import Link from "next/link";
-import Head from "next/head";
-import { dashboard } from "../../../../config.json";
-import GuildData from "../../../interfaces/Guild";
 import { GetServerSideProps } from "next";
+import Head from "next/head";
+import GuildData from "../../../interfaces/Guild";
+import AlertMessage from "../../../dashboard/components/AlertMessage";
 
 interface Props {
   guild: GuildData;
   isAuth: boolean;
+  error: string | undefined;
 }
 
-const Guild: FC<Props> = ({ guild, isAuth }: Props) => {
+const Guild: FC<Props> = ({ guild, isAuth, error }: Props) => {
   const router = useRouter();
 
   useEffect(() => {
@@ -26,18 +27,24 @@ const Guild: FC<Props> = ({ guild, isAuth }: Props) => {
     }
   }, [guild, isAuth, router]);
 
+  if (error) {
+    return <AlertMessage type="error" message={error} />;
+  }
+
   return (
     <>
       <Head>
         <title>
-          Viewing {guild?.name} - {dashboard.botName}
+          Viewing {guild?.name} - {process.env["NEXT_PUBLIC_DASHBOARD_BOTNAME"]}
         </title>
       </Head>
       <div className="page-title">
         <h4>Current guild: {guild.name}</h4>
-        <a className="btn btn-primary" href="/dashboard">
-          Return
-        </a>
+        <Link href="/dashboard">
+          <a href="/dashboard" className="btn btn-primary">
+            Return
+          </a>
+        </Link>
       </div>
 
       <div className="grid">
@@ -80,7 +87,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const cookies = parseCookies(ctx);
 
   const data = await (
-    await fetch(`${dashboard.dashboardUrl}/api/guilds/${ctx.query.id}`, {
+    await fetch(`${process.env["NEXT_PUBLIC_DASHBOARD_URL"]}/api/guilds/${ctx.query.id}`, {
       headers: {
         auth: cookies?.token,
       },
@@ -91,6 +98,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     props: {
       isAuth: data.error !== "invalid_token",
       guild: data?.guild || {},
+      error: data?.error || null,
     },
   };
 };

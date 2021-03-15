@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any*/
 import { Message, version } from "discord.js";
 import moment from "moment";
 import Command from "../../structures/Command";
@@ -19,6 +18,7 @@ export default class BotInfoCommand extends Command {
     const lang = await bot.utils.getGuildLang(message.guild?.id);
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const uptime = (moment.duration(bot.uptime) as any).format(
         " D [days], H [hrs], m [mins], s [secs]"
       );
@@ -36,8 +36,8 @@ export default class BotInfoCommand extends Command {
         .addField(
           `${lang.HELP.COMMANDS}:`,
           `
-  **${lang.BOT.USED_SINCE_UP}:** ${used_since_up}
-  **${lang.BOT.TOTAL_USED_CMDS}:** ${total_used_cmds}`
+  **${lang.BOT.USED_SINCE_UP}:** ${bot.utils.formatNumber(used_since_up)}
+  **${lang.BOT.TOTAL_USED_CMDS}:** ${bot.utils.formatNumber(total_used_cmds)}`
         )
         .addField(
           `__**${lang.BOT.INFO}:**__`,
@@ -61,8 +61,10 @@ export default class BotInfoCommand extends Command {
           true
         )
         .addField(
-          `${lang.BOT.DASHBOARD}`,
-          `[Click Here](${bot.config.dashboard.dashboardUrl})`,
+          "Links",
+          `
+  [${lang.BOT.INVITE_BOT}](https://discord.com/oauth2/authorize?client_id=${bot.user?.id}&scope=bot&permissions=8)
+  [Dashboard](${process.env["NEXT_PUBLIC_DASHBOARD_URL"]})`,
           true
         );
 

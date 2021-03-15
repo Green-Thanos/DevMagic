@@ -1,9 +1,39 @@
-# Magic Command list
+Click Any
 
-This command list was automatically generated in [this file](https://github.com/Dev-CasperTheGhost/ghostybot/tree/main/src/scripts/generateCommandList.js).
-Magic has a total of 203 commands.
+## Category list
 
-Click any of the command names for more information
+
+[admin](#category-admin)
+
+[animal](#category-animal)
+
+[economy](#category-economy)
+
+[games](#category-games)
+
+[image](#category-image)
+
+[levels](#category-levels)
+
+[music](#category-music)
+
+[util](#category-util)
+
+[exempt](#category-exempt)
+
+[botowner](#category-botowner)
+
+[giveaway](#category-giveaway)
+
+[reactions](#category-reactions)
+
+[reminder](#category-reminder)
+
+[ticket](#category-ticket)
+
+[disabled](#category-disabled)
+
+[custom](#category-custom)
 
 ## Command list
 
@@ -321,7 +351,7 @@ Click any of the command names for more information
   ##
 ### Category: util
 
-**Total commands: 46**
+**Total commands: 48**
 
 [afk:](#afk) N/A
 
@@ -361,8 +391,6 @@ Click any of the command names for more information
 
 [github:](#github) Search someone on github
 
-[hastebin:](#hastebin) Get a link of hastebin for your text
-
 [help:](#help) Shows all commands Or shows more info about a command
 
 [randomimage:](#randomimage) Search any image you want from google
@@ -379,7 +407,11 @@ Click any of the command names for more information
 
 [morse:](#morse) Convert a string to morse code
 
+[nasanews:](#nasanews) Looks up an astronomy-related term on NASA's Website
+
 [npm:](#npm) Search packages on npm by their name
+
+[pastebin:](#pastebin) Get a link of pastebin for your text
 
 [playstore:](#playstore) Show Playstore Application Information Of Your Given Name!
 
@@ -406,6 +438,8 @@ Click any of the command names for more information
 [uptime:](#uptime) Returns the uptime of the bot
 
 [userinfo:](#userinfo) Get user info
+
+[verify:](#verify) Verify yourself to get guild access
 
 [weather:](#weather) See the weather in a country/city
 
@@ -3657,24 +3691,6 @@ Click any of the command names for more information
 
 [Back to top](#ghostybot-command-list)
 
-## hastebin
-
-**Category:** util
-
-**Description:** Get a link of hastebin for your text
-
-**Usage:** `<extension (js, ts, ...)> <code>`
-
-**Aliases:** `haste`
-
-**Member Permissions:** None
-
-**Bot Permissions:** SEND_MESSAGES
-
-**Required Arguments:** `extension(string)`, `code(string)`
-
-[Back to top](#ghostybot-command-list)
-
 ## help
 
 **Category:** util
@@ -3819,6 +3835,24 @@ Click any of the command names for more information
 
 [Back to top](#ghostybot-command-list)
 
+## nasanews
+
+**Category:** util
+
+**Description:** Looks up an astronomy-related term on NASA's Website
+
+**Usage:** `N/A`
+
+**Aliases:** N/A
+
+**Member Permissions:** None
+
+**Bot Permissions:** SEND_MESSAGES
+
+**Required Arguments:** `query(string)`
+
+[Back to top](#ghostybot-command-list)
+
 ## npm
 
 **Category:** util
@@ -3834,6 +3868,24 @@ Click any of the command names for more information
 **Bot Permissions:** SEND_MESSAGES
 
 **Required Arguments:** `query(string)`
+
+[Back to top](#ghostybot-command-list)
+
+## pastebin
+
+**Category:** util
+
+**Description:** Get a link of pastebin for your text
+
+**Usage:** `<extension (js, ts, ...)> <code>`
+
+**Aliases:** `paste`
+
+**Member Permissions:** None
+
+**Bot Permissions:** SEND_MESSAGES
+
+**Required Arguments:** `extension(string)`, `code(string)`
 
 [Back to top](#ghostybot-command-list)
 
@@ -4062,6 +4114,24 @@ Click any of the command names for more information
 **Usage:** `<user>`
 
 **Aliases:** `whois`,`user`,`u`
+
+**Member Permissions:** None
+
+**Bot Permissions:** SEND_MESSAGES
+
+**Required Arguments:** N/A
+
+[Back to top](#ghostybot-command-list)
+
+## verify
+
+**Category:** util
+
+**Description:** Verify yourself to get guild access
+
+**Usage:** `N/A`
+
+**Aliases:** N/A
 
 **Member Permissions:** None
 

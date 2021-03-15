@@ -1,23 +1,24 @@
 import { useState, useEffect, FC, ChangeEventHandler, FormEvent } from "react";
 import { parseCookies } from "nookies";
 import Head from "next/head";
+import { Channel, Role } from "discord.js";
 import fetch from "node-fetch";
 import { GetServerSideProps } from "next";
 import fs from "fs";
-import { dashboard } from "../../../../config.json";
 import AlertMessage from "../../../dashboard/components/AlertMessage";
 import timezones from "../../../data/timezones.json";
 import { useRouter } from "next/router";
 import Switch from "../../../dashboard/components/Switch";
 import Guild from "../../../interfaces/Guild";
+import Link from "next/link";
 
 export interface FieldItem {
   type: "select" | "input" | "textarea";
   id: string;
   label: string;
   onChange: ChangeEventHandler<any>;
-  value: any;
-  data?: any[];
+  value: string | number | readonly string[] | undefined;
+  data?: Channel[] | Role[];
 }
 
 export interface Field {
@@ -29,17 +30,19 @@ export interface Field {
 }
 
 interface Props {
+  error: string | undefined;
   guild: Guild;
   languages: string[];
   isAuth: boolean;
 }
 
-const Settings: FC<Props> = ({ guild, languages, isAuth }: Props) => {
+const Settings: FC<Props> = ({ guild, languages, isAuth, error: serverError }: Props) => {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [welcomeData, setWelcomeData] = useState(guild?.welcome_data || {});
   const [leaveData, setLeaveData] = useState(guild?.leave_data || {});
   const [levelData, setLevelData] = useState(guild?.level_data || {});
+  const [verifyData, setVerifyData] = useState(guild?.verify_data || {});
   const [ticketData, setTicketData] = useState(guild?.ticket_data || {});
   const [starboardsData, setStarboardsData] = useState(guild?.starboards_data || {});
   const [suggestChannel, setSuggestChannel] = useState(guild.suggest_channel || "");
@@ -241,6 +244,43 @@ const Settings: FC<Props> = ({ guild, languages, isAuth }: Props) => {
         },
       ],
     },
+    {
+      enabled: verifyData?.enabled ?? false,
+      id: "verify_data",
+      title: "Verification",
+      onChecked: () => {
+        setVerifyData((prev) => ({
+          ...prev,
+          enabled: !verifyData?.enabled,
+        }));
+      },
+      fields: [
+        {
+          type: "select",
+          id: "verify_channel_id",
+          value: verifyData?.channel_id || "",
+          onChange: (e) =>
+            setVerifyData((prev) => ({
+              ...prev,
+              channel_id: e.target.value,
+            })),
+          label: "Verify Channel",
+          data: guild.channels,
+        },
+        {
+          type: "select",
+          id: "verify_role_id",
+          value: verifyData?.role_id || "",
+          onChange: (e) =>
+            setVerifyData((prev) => ({
+              ...prev,
+              role_id: e.target.value,
+            })),
+          label: "Verified Role",
+          data: guild.roles,
+        },
+      ],
+    },
   ];
   const mainFields = [
     {
@@ -317,7 +357,7 @@ const Settings: FC<Props> = ({ guild, languages, isAuth }: Props) => {
     e.preventDefault();
 
     try {
-      const res = await fetch(`${dashboard.dashboardUrl}/api/guilds/${guild.id}`, {
+      const res = await fetch(`${process.env["NEXT_PUBLIC_DASHBOARD_URL"]}/api/guilds/${guild.id}`, {
         method: "POST",
         body: JSON.stringify({
           welcome_data: welcomeData,
@@ -334,6 +374,7 @@ const Settings: FC<Props> = ({ guild, languages, isAuth }: Props) => {
           timezone: tz,
           auto_delete_cmd: autoDelCmd === "true",
           muted_role_id: mutedRoleId,
+          verify_data: verifyData,
         }),
       });
       const data = await res.json();
@@ -348,18 +389,24 @@ const Settings: FC<Props> = ({ guild, languages, isAuth }: Props) => {
     }
   }
 
+  if (serverError) {
+    return <AlertMessage type="error" message={serverError} />;
+  }
+
   return (
     <>
       <Head>
         <title>
-          {guild?.name} - Settings / {dashboard.botName} Dashboard
+          {guild?.name} - Settings / {process.env["NEXT_PUBLIC_DASHBOARD_BOTNAME"]} Dashboard
         </title>
       </Head>
       <div className="page-title">
         <h4>{guild?.name} - Settings</h4>
-        <a className="btn btn-primary" href={`/dashboard/${guild.id}`}>
-          Return
-        </a>
+        <Link href={`/dashboard/${guild.id}`}>
+          <a href={`/dashboard/${guild.id}`} className="btn btn-primary">
+            Return
+          </a>
+        </Link>
       </div>
       {message ? <AlertMessage type="success" message={message} /> : null}
       {error ? <AlertMessage type="error" message={error} /> : null}
@@ -477,17 +524,20 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   });
 
   const data = await (
-    await fetch(`${dashboard.dashboardUrl}/api/guilds/${ctx.query.id}`, {
+    await fetch(`${process.env["NEXT_PUBLIC_DASHBOARD_URL"]}/api/guilds/${ctx.query.id}`, {
       headers: {
         auth: cookies?.token,
       },
     })
   ).json();
 
+  console.log(data.error);
+
   return {
     props: {
       guild: data?.guild || {},
       isAuth: data.error !== "invalid_token",
+      error: data?.error || null,
       languages: langs,
     },
   };

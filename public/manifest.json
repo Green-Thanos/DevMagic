@@ -1,6 +1,6 @@
 {
-    "short_name": "bot",
-    "name": "bot - dashboard",
+    "short_name": "GhostyBot",
+    "name": "GhostyBot - Dashboard",
     "start_url": "/",
     "display": "standalone",
     "theme_color": "#7289da",
