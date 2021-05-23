@@ -13,12 +13,16 @@ export default class CommandHandler {
 
   async loadCommands() {
     try {
-      const files = glob.sync("./src/commands/**/*.ts");
+      const files = process.env.BUILD_PATH
+        ? glob.sync("./dist/src/commands/**/*.js")
+        : glob.sync("./src/commands/**/*.ts");
+
+      const path = process.env.BUILD_PATH ? "../../../" : "../../";
 
       for (const file of files) {
         delete require.cache[file];
-        const options = parse(`../../${file}`);
-        const File = await (await import(`../../${file}`)).default;
+        const options = parse(`${path}${file}`);
+        const File = await (await import(`${path}${file}`)).default;
         const command = new File(this.bot, options) as Command;
 
         if (!command.execute) {
@@ -41,7 +45,7 @@ export default class CommandHandler {
           this.bot.cooldowns.set(command.name, new Collection());
         }
 
-        if (process.env["DEBUG_MODE"] === true) {
+        if (process.env["DEBUG_MODE"] === "true") {
           this.bot.logger.log("COMMAND", `Loaded ${command.name}`);
         }
       }

@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import moment from "moment";
+import dayJs from "dayjs";
 import Command from "../../structures/Command";
 import Bot from "../../structures/Bot";
 
@@ -15,11 +15,12 @@ export default class RemindersCommand extends Command {
   async execute(bot: Bot, message: Message, args: string[]) {
     const lang = await bot.utils.getGuildLang(message.guild?.id);
     try {
-      const member = await bot.utils.findMember(message, args, true);
+      const member = await bot.utils.findMember(message, args, { allowAuthor: true });
 
       if (!member) {
         return message.channel.send(lang.ADMIN.PROVIDE_VALID_MEMBER);
       }
+
       const user = await bot.utils.getUserById(member.user.id, message.guild?.id);
       if (!user) return;
 
@@ -28,8 +29,8 @@ export default class RemindersCommand extends Command {
       }
 
       const mappedReminders = user.reminder.reminders.map((reminder) => {
-        const endsAt = (moment.duration(reminder.ends_at - Date.now()) as any).format(
-          "D [days], H [hrs], m [mins], s [secs]"
+        const endsAt = dayJs(reminder.ends_at - Date.now()).format(
+          "D [days], H [hrs], m [mins], s [secs]",
         );
 
         return `**${lang.REMINDER.MESSAGE}** ${reminder.msg}

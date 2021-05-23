@@ -1,4 +1,4 @@
-import { Message, TextChannel } from "discord.js";
+import { Message, TextChannel, Permissions } from "discord.js";
 import Command from "../../structures/Command";
 import Bot from "../../structures/Bot";
 
@@ -8,8 +8,8 @@ export default class LockChannelCommand extends Command {
       name: "lockchannel",
       description: "Lock A channel",
       category: "admin",
-      botPermissions: ["MANAGE_CHANNELS"],
-      memberPermissions: ["MANAGE_CHANNELS"],
+      botPermissions: [Permissions.FLAGS.MANAGE_CHANNELS],
+      memberPermissions: [Permissions.FLAGS.MANAGE_CHANNELS],
       requiredArgs: [{ name: "reason" }],
     });
   }
@@ -37,8 +37,8 @@ export default class LockChannelCommand extends Command {
       message.channel.send(
         lang.ADMIN.LOCKED_CHANNEL_REASON.replace("{channel}", `${channel}`).replace(
           "{lockReason}",
-          lockReason
-        )
+          lockReason,
+        ),
       );
     } catch (err) {
       bot.utils.sendErrorLog(err, "error");

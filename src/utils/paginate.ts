@@ -9,7 +9,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]) {
   let page = 0;
 
   const currentPage = await message.channel.send(
-    embeds[0].setFooter(`Page: ${page + 1} / ${embeds.length} (Times out in 2minutes)`)
+    embeds[0].setFooter(`Page: ${page + 1} / ${embeds.length} (Times out in 5minutes)`),
   );
 
   EMOJIS.forEach((emoji) => {
@@ -18,11 +18,12 @@ async function paginate(message: Message, embeds: MessageEmbed[]) {
   currentPage.react(END_EMOJI);
 
   const filter = (reaction: MessageReaction, user: User) => {
+    if (!reaction.emoji.name) return false;
     return [...EMOJIS, END_EMOJI].includes(reaction.emoji.name) && !user.bot;
   };
 
-  // Time out after 2minutes
-  const collector = currentPage.createReactionCollector(filter, { time: 120_000 });
+  // Time out after 5minutes
+  const collector = currentPage.createReactionCollector(filter, { time: 60 * 60 * 5 * 1000 });
 
   collector.on("collect", (reaction) => {
     reaction.users.remove(message.author).catch(() => null);
@@ -55,7 +56,7 @@ async function paginate(message: Message, embeds: MessageEmbed[]) {
 
     if (page !== -1) {
       currentPage.edit(
-        embeds[page].setFooter(`Page: ${page + 1} / ${embeds.length} (Times out in 2minutes)`)
+        embeds[page].setFooter(`Page: ${page + 1} / ${embeds.length} (Times out in 5minutes)`),
       );
     }
   });

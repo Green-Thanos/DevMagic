@@ -1,4 +1,4 @@
-import { Message, TextChannel } from "discord.js";
+import { Message, TextChannel, Permissions } from "discord.js";
 import Command from "../../structures/Command";
 import Bot from "../../structures/Bot";
 
@@ -9,7 +9,7 @@ export default class AnnounceCommand extends Command {
       description: "Announce something in a channel",
       usage: "[channel] <text>",
       category: "admin",
-      memberPermissions: ["MANAGE_MESSAGES"],
+      memberPermissions: [Permissions.FLAGS.MANAGE_MESSAGES],
     });
   }
 
@@ -19,7 +19,7 @@ export default class AnnounceCommand extends Command {
     try {
       if (!args[0])
         return message.channel.send(
-          lang.ADMIN.TEXT_OR_VALID_CHANNEL + "\n" + lang.ADMIN.DEFAULT_ANNOUNCE_CHANNEL
+          lang.ADMIN.TEXT_OR_VALID_CHANNEL + "\n" + lang.ADMIN.DEFAULT_ANNOUNCE_CHANNEL,
         );
 
       const guild = await bot.utils.getGuildById(message.guild?.id);
@@ -42,7 +42,7 @@ export default class AnnounceCommand extends Command {
         .setDescription(text);
 
       (bot.channels.cache.get(
-        announceChannel ? announceChannel : channel!.id
+        announceChannel ? announceChannel : channel!.id,
       ) as TextChannel)?.send(embed);
     } catch (err) {
       bot.utils.sendErrorLog(err, "error");

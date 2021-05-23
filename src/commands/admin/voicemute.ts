@@ -1,4 +1,4 @@
-import { Message } from "discord.js";
+import { Message, Permissions } from "discord.js";
 import Command from "../../structures/Command";
 import Bot from "../../structures/Bot";
 
@@ -9,8 +9,8 @@ export default class VoiceMuteCommand extends Command {
       description: "voicemute a user",
       usage: "<user>",
       category: "admin",
-      botPermissions: ["MUTE_MEMBERS"],
-      memberPermissions: ["MUTE_MEMBERS"],
+      botPermissions: [Permissions.FLAGS.MUTE_MEMBERS],
+      memberPermissions: [Permissions.FLAGS.MUTE_MEMBERS],
       requiredArgs: [{ name: "user" }],
     });
   }
@@ -35,15 +35,15 @@ export default class VoiceMuteCommand extends Command {
       muteUser.user.send(
         lang.ADMIN.YOU_MUTED.replace("{guildName}", `${message.guild?.name}`).replace(
           "{reason}",
-          muteReason
-        )
+          muteReason,
+        ),
       );
 
       message.channel.send(
         lang.ADMIN.USER_MUTED.replace("{muteUserTag}", muteUser.user.tag).replace(
           "{reason}",
-          muteReason
-        )
+          muteReason,
+        ),
       );
     } catch (err) {
       bot.utils.sendErrorLog(err, "error");

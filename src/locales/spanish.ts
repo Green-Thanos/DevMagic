@@ -379,6 +379,13 @@ export default {
     WEB_NSFW: "Cannot display this site in a non-NSFW channel",
     WEB_UNAVAILABLE: "This site seems to be unavailable",
     IP_NOT_FOUND: "No results were found",
+    IP_LON_LAT: "Lon/Lat",
+    IP_ISP: "ISP",
+    IP_ORG: "Org",
+    IP_TIMEZONE: "Timezone",
+    IP_LOC: "es", // https://ipwhois.io/documentation Localization
+    VERIFY_CHANNEL: "Verification channel is: {channel}",
+    VERIFY_NOT_ENABLED: "Verification is not enabled for this guild",
   },
   BOT: {
     GUILDS: "Gremios",
@@ -443,7 +450,7 @@ export default {
     },
   },
   NASANEWS: {
-    NOT_FOUND: "Ningun hecho fue encontrado con {query}."
+    NOT_FOUND: "Ningun hecho fue encontrado con {query}.",
   },
   POKEMON: {
     SPECIES: "Especie",
@@ -722,5 +729,36 @@ export default {
     NEED_PERMS: "You need: {perms} permissions",
     MUST_BE_DATE: "That arg type must be a **date**. E.G.: `1h`, `2days`, `5min`",
     MUST_BE_NUMBER: "That arg type must be a **number**.",
+  },
+  OTHER: {
+    REGIONS: {
+      europe: ":flag_eu: Europe",
+      "eu-west": ":flag_eu: Europe-West",
+      "eu-central": ":flag_eu: Europe-Central",
+      brazil: ":flag_br: Brazil",
+      hongkong: ":flag_hk: Hongkong",
+      india: ":flag_in: India",
+      japan: ":flag_jp: Japan",
+      russia: ":flag_ru: Russia",
+      singapore: ":flag_sg: Singapore",
+      southafrica: ":flag_za: South Africa",
+      sydney: ":flag_au: Sydney",
+      frankfurt: ":flag_de: Frankfurt",
+      "us-central": ":flag_us: USA-Central",
+      "us-east": ":flag_us: US-East",
+      "us-west": ":flag_us: US-West",
+      "us-south": ":flag_us: US-South",
+      amsterdam: ":flag_nl: Amsterdam",
+      dubai: ":flag_ae: Dubai",
+      "south-korea": ":flag_kr: South Korea",
+      london: ":flag_gb: London",
+    },
+    VERLEVELS: {
+      NONE: "None",
+      LOW: "Low",
+      MEDIUM: "Medium",
+      HIGH: "High",
+      VERY_HIGH: "Very High",
+    },
   },
 };

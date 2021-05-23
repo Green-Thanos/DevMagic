@@ -1,4 +1,4 @@
-import { Message } from "discord.js";
+import { Message, Permissions } from "discord.js";
 import Command from "../../structures/Command";
 import Bot from "../../structures/Bot";
 
@@ -8,8 +8,8 @@ export default class DeafenCommand extends Command {
       name: "deafen",
       description: "Deafen a user",
       category: "admin",
-      botPermissions: ["DEAFEN_MEMBERS"],
-      memberPermissions: ["DEAFEN_MEMBERS"],
+      botPermissions: [Permissions.FLAGS.DEAFEN_MEMBERS],
+      memberPermissions: [Permissions.FLAGS.DEAFEN_MEMBERS],
       requiredArgs: [{ name: "member" }, { name: "reason" }],
     });
   }
@@ -34,14 +34,14 @@ export default class DeafenCommand extends Command {
       deafenMember.user.send(
         lang.ADMIN.DEAFEN_SUCCESS_DM.replace("{guild}", `${message.guild?.name}`).replace(
           "{reason}",
-          deafenReason
-        )
+          deafenReason,
+        ),
       );
       message.channel.send(
         lang.ADMIN.DEAFEN_SUCCESS.replace("{member}", `${deafenMember.user.tag}`).replace(
           "{reason}",
-          deafenReason
-        )
+          deafenReason,
+        ),
       );
     } catch (err) {
       bot.utils.sendErrorLog(err, "error");

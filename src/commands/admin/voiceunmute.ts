@@ -1,4 +1,4 @@
-import { Message } from "discord.js";
+import { Message, Permissions } from "discord.js";
 import Command from "../../structures/Command";
 import Bot from "../../structures/Bot";
 
@@ -9,8 +9,8 @@ export default class VoiceUnMuteCommand extends Command {
       description: "unmute a user from voice channel",
       usage: "<user>",
       category: "admin",
-      botPermissions: ["MUTE_MEMBERS"],
-      memberPermissions: ["MUTE_MEMBERS"],
+      botPermissions: [Permissions.FLAGS.MUTE_MEMBERS],
+      memberPermissions: [Permissions.FLAGS.MUTE_MEMBERS],
       requiredArgs: [{ name: "user" }],
     });
   }
@@ -31,10 +31,10 @@ export default class VoiceUnMuteCommand extends Command {
       unmuteMember.voice.setMute(false, "unmuteReason");
 
       unmuteMember.user.send(
-        lang.ADMIN.YOU_UNMUTED.replace("{guildName}", `${message.guild?.name}`)
+        lang.ADMIN.YOU_UNMUTED.replace("{guildName}", `${message.guild?.name}`),
       );
       message.channel.send(
-        lang.ADMIN.USER_SUC_UNMUTED.replace("{unmuteUserTag}", unmuteMember.user.tag)
+        lang.ADMIN.USER_SUC_UNMUTED.replace("{unmuteUserTag}", unmuteMember.user.tag),
       );
     } catch (err) {
       bot.utils.sendErrorLog(err, "error");

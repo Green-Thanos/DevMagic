@@ -13,7 +13,7 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
       const guilds = await req.bot.utils.handleApiRequest(
         "/users/@me/guilds",
         { data: `${token}`, type: "Bearer" },
-        "GET"
+        "GET",
       );
 
       if (guilds.error || guilds.message) {
@@ -25,7 +25,7 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
       }
 
       const isAdminGuilds = guilds.filter((guild: Guild) => {
-        const bits = BigInt(guild.permissions);
+        const bits = BigInt(guild.permissions as number);
         const permissions = new Permissions(bits);
 
         return permissions.has("ADMINISTRATOR");
@@ -49,7 +49,7 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
       return res.json(
         JSON.stringify({ guilds: filteredGuilds }, (_, value) => {
           return typeof value === "bigint" ? value.toString() : value;
-        })
+        }),
       );
     }
     default: {

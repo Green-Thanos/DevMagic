@@ -1,4 +1,4 @@
-import { Message } from "discord.js";
+import { Message, Permissions } from "discord.js";
 import Command from "../../structures/Command";
 import Bot from "../../structures/Bot";
 
@@ -9,8 +9,8 @@ export default class BanCommand extends Command {
       description: "ban",
       usage: "<user>",
       category: "admin",
-      botPermissions: ["BAN_MEMBERS"],
-      memberPermissions: ["BAN_MEMBERS"],
+      botPermissions: [Permissions.FLAGS.BAN_MEMBERS],
+      memberPermissions: [Permissions.FLAGS.BAN_MEMBERS],
       requiredArgs: [{ name: "user" }],
     });
   }
@@ -28,13 +28,13 @@ export default class BanCommand extends Command {
 
       if (!banReason) banReason = lang.GLOBAL.NOT_SPECIFIED;
 
-      if (!banMember.bannable || banMember.permissions.has("BAN_MEMBERS")) {
+      if (!banMember.bannable || banMember.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) {
         return message.channel.send(lang.MEMBER.CANNOT_BE_BANNED);
       }
 
       if (message.guild.me.roles.highest.comparePositionTo(banMember.roles.highest) < 0) {
         return message.channel.send(
-          lang.ROLES.MY_ROLE_MUST_BE_HIGHER.replace("{member}", banMember.user?.tag)
+          lang.ROLES.MY_ROLE_MUST_BE_HIGHER.replace("{member}", banMember.user?.tag),
         );
       }
 
@@ -47,8 +47,8 @@ export default class BanCommand extends Command {
         banMember.user.send(
           lang.MEMBER.DM_BAN_MESSAGE.replace("{guild_name}", message.guild.name).replace(
             "{ban_reason}",
-            banReason
-          )
+            banReason,
+          ),
         );
         // eslint-disable-next-line no-empty
       } catch {}
@@ -56,8 +56,8 @@ export default class BanCommand extends Command {
       message.channel.send(
         lang.MEMBER.GUILD_BAN_MESSAGE.replace("{member}", banMember.user.username).replace(
           "{ban_reason}",
-          banReason
-        )
+          banReason,
+        ),
       );
     } catch (err) {
       bot.utils.sendErrorLog(err, "error");

@@ -10,8 +10,12 @@ import {
   Role,
   Snowflake,
   PermissionObject,
+  Permissions,
+  Channel,
 } from "discord.js";
-import moment from "moment";
+import dayJs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import jwt from "jsonwebtoken";
 import Bot from "../structures/Bot";
 import UserModel, { IUser, UserData } from "../models/User.model";
@@ -19,6 +23,9 @@ import WarningModal, { IWarning } from "../models/Warning.model";
 import GuildModel, { GuildData, IGuild } from "../models/Guild.model";
 import ApiRequest from "../interfaces/ApiRequest";
 import StickyModel, { Sticky } from "../models/Sticky.model";
+
+dayJs.extend(utc);
+dayJs.extend(timezone);
 
 export interface ErrorLog {
   name?: string;
@@ -73,7 +80,7 @@ export default class Util {
   async addUser(
     userId: string,
     guildId: string | undefined,
-    data?: Partial<UserData>
+    data?: Partial<UserData>,
   ): Promise<IUser | undefined> {
     try {
       const user: IUser = new UserModel({ user_id: userId, guild_id: guildId, ...data });
@@ -89,7 +96,7 @@ export default class Util {
   async updateUserById(
     userId: string,
     guildId: string | undefined,
-    data: Partial<UserData>
+    data: Partial<UserData>,
   ): Promise<void> {
     try {
       const user = await this.getUserById(userId, guildId);
@@ -113,7 +120,7 @@ export default class Util {
     }
   }
 
-  async getGuildById(guildId: string | undefined): Promise<GuildData | undefined> {
+  async getGuildById(guildId: string | undefined): Promise<IGuild | undefined> {
     try {
       let guild = await GuildModel.findOne({ guild_id: guildId });
 
@@ -168,10 +175,14 @@ export default class Util {
     if (error.stack?.includes("DeprecationWarning: Listening to events on the Db class")) return;
 
     const channelId = process.env["ERRORLOGS_CHANNEL_ID"];
-    const channel = (this.bot.channels.cache.get(channelId) ||
-      (await this.bot.channels.fetch(channelId))) as TextChannel;
+    const channel = (this.bot.channels.cache.get(channelId ?? "") ||
+      (await this.bot.channels.fetch(channelId ?? ""))) as TextChannel;
 
-    if (!channel || !channelId || !channel.permissionsFor(this.bot.user!)?.has("SEND_MESSAGES")) {
+    if (
+      (process.env.NODE_ENV !== "production" && !channel) ||
+      !channelId ||
+      !channel.permissionsFor(this.bot.user!)?.has("SEND_MESSAGES")
+    ) {
       return this.bot.logger.error("UNHANDLED ERROR", error?.stack || `${error}`);
     }
 
@@ -204,13 +215,13 @@ export default class Util {
   async findMember(
     message: Partial<Message>,
     args: string[],
-    allowAuthor?: boolean
+    options?: { allowAuthor?: boolean; index?: number },
   ): Promise<GuildMember | undefined | null> {
     if (!message.guild) return;
 
     try {
       let member: GuildMember | null | undefined;
-      const arg = args[0]?.replace?.(/[<@!>]/gi, "") || args[0];
+      const arg = args[options?.index ?? 0]?.replace?.(/[<@!>]/gi, "") || args[options?.index ?? 0];
 
       const mention = // Check if the first mention is not the bot prefix
         message.mentions?.users.first()?.id !== this.bot.user?.id
@@ -220,14 +231,16 @@ export default class Util {
       member =
         message.guild.members.cache.find((m) => m.user.id === mention?.id) ||
         message.guild.members.cache.get(arg) ||
-        message.guild.members.cache.find((m) => m.user.id === args[0]) ||
-        (message.guild.members.cache.find((m) => m.user.tag === args[0]) as GuildMember);
+        message.guild.members.cache.find((m) => m.user.id === args[options?.index ?? 0]) ||
+        (message.guild.members.cache.find(
+          (m) => m.user.tag === args[options?.index ?? 0],
+        ) as GuildMember);
 
       if (!member) {
         member = await message.guild.members.fetch(arg)[0];
       }
 
-      if (!member && allowAuthor) {
+      if (!member && options?.allowAuthor) {
         member = message.member;
       }
 
@@ -253,7 +266,7 @@ export default class Util {
   }
 
   async getGuildLang(
-    guildId: string | undefined
+    guildId: string | undefined,
   ): Promise<typeof import("../locales/english").default> {
     const guild = await this.getGuildById(guildId);
 
@@ -307,13 +320,13 @@ export default class Util {
   async createStarboard(
     channel: { id: string | undefined; guild: { id: string | undefined } },
     options,
-    old: { channelID: string | undefined; emoji: string | undefined }
+    old: { channelID: string | undefined; emoji: string | undefined },
   ) {
     if (old) {
       old.channelID && old.emoji && this.bot.starboardsManager.delete(old.channelID, old.emoji);
     }
 
-    this.bot.starboardsManager.create(channel as any, {
+    this.bot.starboardsManager.create((channel as unknown) as Channel, {
       ...options,
       selfStar: true,
       starEmbed: true,
@@ -324,10 +337,10 @@ export default class Util {
 
   async formatDate(date: string | Date | number | null, guildId: string | undefined) {
     const tz = await (await this.getGuildById(guildId))?.timezone;
-    const m = moment(date);
+    const m = dayJs.tz(`${date}`, tz || "America/New_York").format("MM/DD/YYYY, h:mm:ss a");
 
     return {
-      date: (m as any).tz(tz || "America/New_York").format("MM/DD/YYYY, h:mm:ss a"),
+      date: m,
       tz: tz,
     };
   }
@@ -335,7 +348,7 @@ export default class Util {
   async updateMuteChannelPerms(
     guild: Guild,
     memberId: Snowflake,
-    perms: Partial<PermissionObject>
+    perms: Partial<PermissionObject>,
   ) {
     guild.channels.cache.forEach((channel) => {
       channel.updateOverwrite(memberId, perms).catch((e) => {
@@ -379,12 +392,12 @@ export default class Util {
   async handleApiRequest(
     path: string,
     tokenData: { data: string; type: "Bot" | "Bearer" },
-    method?: string
+    method?: string,
   ) {
     try {
       const bearer =
         tokenData.type === "Bearer"
-          ? jwt.verify(tokenData.data, process.env["DASHBOARD_JWT_SECRET"])
+          ? jwt.verify(tokenData.data, process.env["DASHBOARD_JWT_SECRET"] ?? "")
           : tokenData.data;
 
       if (!bearer) {
@@ -407,7 +420,7 @@ export default class Util {
     req: ApiRequest,
     admin?: {
       guildId: string;
-    }
+    },
   ) {
     const token = req.cookies.token || req.headers.auth;
     const data: { error: string } | { id: string } = await this.handleApiRequest("/users/@me", {
@@ -433,10 +446,23 @@ export default class Util {
     }
   }
 
-  errorEmbed(permissions: string[], message: Message) {
+  errorEmbed(permissions: bigint[], message: Message, lang: Record<string, string>) {
     return this.baseEmbed(message)
       .setTitle("Woah!")
-      .setDescription(`❌ I need ${permissions.map((p) => `\`${p}\``).join(", ")} permissions!`)
+      .setDescription(
+        `❌ I need ${permissions
+          .map((p) => {
+            const perms: string[] = [];
+            Object.keys(Permissions.FLAGS).map((key) => {
+              if (Permissions.FLAGS[key] === p) {
+                perms.push(`\`${lang?.[key]}\``);
+              }
+            });
+
+            return perms;
+          })
+          .join(", ")} permissions!`,
+      )
       .setColor("ORANGE");
   }
 
@@ -452,7 +478,7 @@ export default class Util {
   parseMessage(
     message: string,
     user: DiscordUser,
-    msg?: Message | { guild: Guild; author: DiscordUser }
+    msg?: Message | { guild: Guild; author: DiscordUser },
   ): string {
     return message
       .split(" ")

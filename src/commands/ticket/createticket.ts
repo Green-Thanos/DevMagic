@@ -1,6 +1,6 @@
+import { Message, OverwriteResolvable, TextChannel, Permissions } from "discord.js";
 import Command from "../../structures/Command";
 import Bot from "../../structures/Bot";
-import { Message, OverwriteResolvable, TextChannel } from "discord.js";
 
 export default class CreateTicketCommand extends Command {
   constructor(bot: Bot) {
@@ -8,7 +8,7 @@ export default class CreateTicketCommand extends Command {
       name: "createticket",
       description: "Creates a ticket",
       category: "ticket",
-      botPermissions: ["MANAGE_CHANNELS"],
+      botPermissions: [Permissions.FLAGS.MANAGE_CHANNELS],
     });
   }
 
@@ -17,7 +17,7 @@ export default class CreateTicketCommand extends Command {
     try {
       const guild = await bot.utils.getGuildById(message.guild?.id);
       const tickets = message.guild?.channels.cache.filter((ch) =>
-        ch.name.startsWith(lang.TICKET.TICKET.replace("#{Id}", ""))
+        ch.name.startsWith(lang.TICKET.TICKET.replace("#{Id}", "")),
       );
       if (!tickets) return;
 
@@ -26,7 +26,10 @@ export default class CreateTicketCommand extends Command {
 
       if (!guild?.ticket_data.enabled) {
         return message.channel.send(
-          lang.TICKET.NOT_ENABLED.replace("{botName}", process.env["NEXT_PUBLIC_DASHBOARD_BOTNAME"])
+          lang.TICKET.NOT_ENABLED.replace(
+            "{botName}",
+            `${process.env["NEXT_PUBLIC_DASHBOARD_BOTNAME"]}`,
+          ),
         );
       }
 
@@ -63,7 +66,7 @@ export default class CreateTicketCommand extends Command {
           nsfw: false,
           topic: lang.TICKET.TICKET_FOR.replace("{member}", message.author.tag),
           permissionOverwrites: DEFAULT_PERMS,
-        }
+        },
       )) as unknown) as TextChannel;
 
       if (guild.ticket_data.parent_id !== null && guild.ticket_data.parent_id !== "Disabled") {

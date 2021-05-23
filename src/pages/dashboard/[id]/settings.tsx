@@ -357,26 +357,29 @@ const Settings: FC<Props> = ({ guild, languages, isAuth, error: serverError }: P
     e.preventDefault();
 
     try {
-      const res = await fetch(`${process.env["NEXT_PUBLIC_DASHBOARD_URL"]}/api/guilds/${guild.id}`, {
-        method: "POST",
-        body: JSON.stringify({
-          welcome_data: welcomeData,
-          leave_data: leaveData,
-          ticket_data: ticketData,
-          level_data: levelData,
-          starboards_data: starboardsData,
+      const res = await fetch(
+        `${process.env["NEXT_PUBLIC_DASHBOARD_URL"]}/api/guilds/${guild.id}`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            welcome_data: welcomeData,
+            leave_data: leaveData,
+            ticket_data: ticketData,
+            level_data: levelData,
+            starboards_data: starboardsData,
 
-          suggest_channel: suggestChannel,
-          announcement_channel: announceChannel,
-          locale: language,
-          audit_channel: auditChannel,
-          prefix: prefix,
-          timezone: tz,
-          auto_delete_cmd: autoDelCmd === "true",
-          muted_role_id: mutedRoleId,
-          verify_data: verifyData,
-        }),
-      });
+            suggest_channel: suggestChannel,
+            announcement_channel: announceChannel,
+            locale: language,
+            audit_channel: auditChannel,
+            prefix: prefix,
+            timezone: tz,
+            auto_delete_cmd: autoDelCmd === "true",
+            muted_role_id: mutedRoleId,
+            verify_data: verifyData,
+          }),
+        },
+      );
       const data = await res.json();
 
       if (data.status === "success") {
@@ -530,8 +533,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     })
   ).json();
-
-  console.log(data.error);
 
   return {
     props: {

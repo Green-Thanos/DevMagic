@@ -1,6 +1,6 @@
 import Command from "../../structures/Command";
 import Bot from "../../structures/Bot";
-import { Message, MessageAttachment } from "discord.js";
+import { Message, MessageAttachment, Permissions } from "discord.js";
 
 export default class XpCommand extends Command {
   constructor(bot: Bot) {
@@ -9,14 +9,14 @@ export default class XpCommand extends Command {
       description: "Get your current level",
       category: "levels",
       aliases: ["lvl", "rank"],
-      botPermissions: ["ATTACH_FILES"],
+      botPermissions: [Permissions.FLAGS.ATTACH_FILES],
     });
   }
 
   async execute(bot: Bot, message: Message, args: string[]) {
     const lang = await bot.utils.getGuildLang(message.guild?.id);
     try {
-      const member = await bot.utils.findMember(message, args, true);
+      const member = await bot.utils.findMember(message, args, { allowAuthor: true });
 
       if (!member) {
         return message.channel.send(lang.ADMIN.PROVIDE_VALID_MEMBER);
@@ -33,7 +33,7 @@ export default class XpCommand extends Command {
       const avatar = encodeURIComponent(member.user.displayAvatarURL());
 
       const url = `https://vacefron.nl/api/rankcard?username=${encodeURIComponent(
-        member.user.username
+        member.user.username,
       )}&avatar=${avatar}&level=${level}&rank=${level}&currentxp=${user.xp}&nextlevelxp=${
         user.xp + 1200
       }&previouslevelxp=${user.xp}&custombg=2F3136&xpcolor=fff`;

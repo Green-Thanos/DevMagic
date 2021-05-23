@@ -376,8 +376,13 @@ export default {
     WEB_NSFW: "Cannot display this site in a non-NSFW channel",
     WEB_UNAVAILABLE: "This site seems to be unavailable",
     IP_NOT_FOUND: "No results were found",
+    IP_LON_LAT: "Lon/Lat",
+    IP_ISP: "ISP",
+    IP_ORG: "Org",
+    IP_TIMEZONE: "Timezone",
+    IP_LOC: "en", // https://ipwhois.io/documentation Localization
     VERIFY_CHANNEL: "Verification channel is: {channel}",
-    VERIFY_NOT_ENABLED: "Verification is not enabled for this guild"
+    VERIFY_NOT_ENABLED: "Verification is not enabled for this guild",
   },
   BOT: {
     GUILDS: "Guilds",
@@ -442,7 +447,7 @@ export default {
     },
   },
   NASANEWS: {
-    NOT_FOUND: "No fact was found with {query}."
+    NOT_FOUND: "No fact was found with {query}.",
   },
   POKEMON: {
     SPECIES: "Species",
@@ -531,7 +536,7 @@ export default {
     BLACKLISTED_NOT_EXISTS: "**{item}** does not exist in blacklisted words",
     BLACKLISTED_REMOVED: "Successfully removed **{item}** from blacklisted words",
     BLACKLISTED_NONE_YET: "There are no blacklisted words yet.",
-    BLACKLISTED_NO_WORDS: "This guid does not have any blacklisted words yet",
+    BLACKLISTED_NO_WORDS: "This guild does not have any blacklisted words yet",
     CREATED_ROLE_CREATED: "Created Role",
     CREATED_ROLE_ADDED: "Successfully created the `{roleName}` role",
     C_TOPIC_PROVIDE_TOPIC: "Please provide a new topic",
@@ -600,7 +605,7 @@ export default {
     NO_WARNINGS: "There are no warnings",
     REMOVED_ALL_WARNINGS: "Successfully removed all warnings",
     ANNOUNCEMENT: "📢 Announcement 📢",
-    PROVIDE_VALID_MEMBER: "Please provide valid a member",
+    PROVIDE_VALID_MEMBER: "Please provide a valid member",
     PROVIDE_VALID_EMOJI: "Please provide a valid emoji",
     PROVIDE_VALID_OPTION: "Please provide an valid option",
     PROVIDE_VALID_CHANNEL_OR_ROLE: "Please provide a valid channel or role!",
@@ -725,5 +730,36 @@ export default {
     NEED_PERMS: "You need: {perms} permissions",
     MUST_BE_DATE: "That arg type must be a **date**. E.G.: `1h`, `2days`, `5min`",
     MUST_BE_NUMBER: "That arg type must be a **number**.",
+  },
+  OTHER: {
+    REGIONS: {
+      europe: ":flag_eu: Europe",
+      "eu-west": ":flag_eu: Europe-West",
+      "eu-central": ":flag_eu: Europe-Central",
+      brazil: ":flag_br: Brazil",
+      hongkong: ":flag_hk: Hongkong",
+      india: ":flag_in: India",
+      japan: ":flag_jp: Japan",
+      russia: ":flag_ru: Russia",
+      singapore: ":flag_sg: Singapore",
+      southafrica: ":flag_za: South Africa",
+      sydney: ":flag_au: Sydney",
+      frankfurt: ":flag_de: Frankfurt",
+      "us-central": ":flag_us: USA-Central",
+      "us-east": ":flag_us: US-East",
+      "us-west": ":flag_us: US-West",
+      "us-south": ":flag_us: US-South",
+      amsterdam: ":flag_nl: Amsterdam",
+      dubai: ":flag_ae: Dubai",
+      "south-korea": ":flag_kr: South Korea",
+      london: ":flag_gb: London",
+    },
+    VERLEVELS: {
+      NONE: "None",
+      LOW: "Low",
+      MEDIUM: "Medium",
+      HIGH: "High",
+      VERY_HIGH: "Very High",
+    },
   },
 };

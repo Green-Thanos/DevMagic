@@ -2,7 +2,7 @@ import { Message } from "discord.js";
 import Command from "../../structures/Command";
 import Bot from "../../structures/Bot";
 
-const API_URL = "https://api.no-api-key.com/api/v2/invert?image=";
+const API_URL = "https://some-random-api.ml/canvas/invert?avatar=";
 
 export default class InvertCommand extends Command {
   constructor(bot: Bot) {
@@ -17,7 +17,7 @@ export default class InvertCommand extends Command {
     const lang = await bot.utils.getGuildLang(message.guild?.id);
 
     try {
-      const member = await bot.utils.findMember(message, args, true);
+      const member = await bot.utils.findMember(message, args, { allowAuthor: true });
       if (!member) {
         return message.channel.send(lang.ADMIN.PROVIDE_VALID_MEMBER);
       }

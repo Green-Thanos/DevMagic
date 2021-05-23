@@ -6,9 +6,9 @@ export default function handler(_, res: NextApiResponse) {
   const DISCORD_CLIENT_ID = process.env["DISCORD_CLIENT_ID"];
 
   const url = `${discordApiUrl}oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(
-    callbackUrl
+    `${callbackUrl}`,
   )}&response_type=code&scope=${encodeURIComponent(
-    "identify guilds"
+    "identify guilds",
   )}&prompt=consent&response_type=code`;
 
   return res.redirect(url);

@@ -1,3 +1,4 @@
+import { Message } from "discord.js";
 import Bot from "../structures/Bot";
 import Helper from "../structures/Helper";
 import UserModel, { IUser } from "../models/User.model";
@@ -26,7 +27,9 @@ export default class ReminderHelper extends Helper {
             guild: guild,
           };
 
-          const member = await bot.utils.findMember(message as any, [user.user_id]);
+          const member = await bot.utils.findMember((message as unknown) as Message, [
+            user.user_id,
+          ]);
 
           if (!member) {
             await bot.utils.updateUserById(user.user_id, user.guild_id, {
@@ -51,7 +54,7 @@ export default class ReminderHelper extends Helper {
               .setAuthor(guildUser.tag, guildUser.displayAvatarURL({ dynamic: true }))
               .setTitle("Unmute")
               .setDescription(
-                `**${guildUser.tag}** was successfully **unmuted** from their temp mute`
+                `**${guildUser.tag}** was successfully **unmuted** from their temp mute`,
               )
               .addField("Mute lasted", user.mute.time);
 

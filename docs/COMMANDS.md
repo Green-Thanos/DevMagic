@@ -1,4 +1,9 @@
-Click Any
+# Ghostybot Command list
+
+This command list was automatically generated in [this file](https://github.com/Dev-CasperTheGhost/ghostybot/tree/main/src/scripts/generateCommandList.ts).
+Ghostybot has a total of 205 commands.
+
+Click any of the command names for more information
 
 ## Category list
 
@@ -115,17 +120,11 @@ Click Any
   ##
 ### Category: animal
 
-**Total commands: 21**
-
-[alpaca:](#alpaca) Shows a picture of a alpaca
-
-[bear:](#bear) Shows a random picture of bear and fact
+**Total commands: 19**
 
 [bird:](#bird) Returns an image of a bird
 
 [bunny:](#bunny) Shows a picture of a bunny
-
-[camel:](#camel) Shows a picture of a camel
 
 [cat:](#cat) Shows a picture of a cat
 
@@ -143,17 +142,19 @@ Click Any
 
 [fox:](#fox) Shows a picture of a fox
 
+[kangaroo:](#kangaroo) An image of a kangaroo
+
 [koala:](#koala) Shows a random picture of koala
 
 [lizard:](#lizard) Shows a picture of a lizard
-
-[llama:](#llama) Shows a picture of a llama
 
 [owl:](#owl) Shows a picture of a owl
 
 [panda:](#panda) Shows a picture of a panda
 
 [racoon:](#racoon) Shows an image of a raccoon
+
+[red-panda:](#red-panda) An image of a red panda
 
 [shibe:](#shibe) Returns an image of a shibe
 
@@ -244,7 +245,7 @@ Click Any
   ##
 ### Category: image
 
-**Total commands: 24**
+**Total commands: 26**
 
 [ad:](#ad) Shows an amazing advertisement
 
@@ -280,6 +281,8 @@ Click Any
 
 [pat:](#pat) Pat somebody
 
+[pikachu:](#pikachu) An image of a pikachu
+
 [poke:](#poke) Poke somebody
 
 [slap:](#slap) Slap somebody
@@ -287,6 +290,8 @@ Click Any
 [smug:](#smug) Smug
 
 [supreme:](#supreme) Display custom text as the Supreme logo
+
+[threshold:](#threshold) threshold your avatar
 
 [trash:](#trash) Put someone in the trash bin someone
 
@@ -351,7 +356,7 @@ Click Any
   ##
 ### Category: util
 
-**Total commands: 48**
+**Total commands: 47**
 
 [afk:](#afk) N/A
 
@@ -447,8 +452,6 @@ Click Any
 
 [wiki:](#wiki) Search something up on Wikipedia
 
-[worldclock:](#worldclock) Shows the time from other countries
-
   ##
 ### Category: exempt
 
@@ -465,13 +468,15 @@ Click Any
   ##
 ### Category: botowner
 
-**Total commands: 4**
+**Total commands: 5**
 
 [blacklist:](#blacklist) Remove/add blacklist from a user
 
 [eval:](#eval) Eval
 
 [leaveguild:](#leaveguild) Leaves a guid by the provided Id
+
+[shell:](#shell) Execute shell commands
 
 [shutdown:](#shutdown) Shuts the bot down
 
@@ -1223,42 +1228,6 @@ Click Any
 
 [Back to top](#ghostybot-command-list)
 
-## alpaca
-
-**Category:** animal
-
-**Description:** Shows a picture of a alpaca
-
-**Usage:** `N/A`
-
-**Aliases:** N/A
-
-**Member Permissions:** None
-
-**Bot Permissions:** SEND_MESSAGES
-
-**Required Arguments:** N/A
-
-[Back to top](#ghostybot-command-list)
-
-## bear
-
-**Category:** animal
-
-**Description:** Shows a random picture of bear and fact
-
-**Usage:** `N/A`
-
-**Aliases:** N/A
-
-**Member Permissions:** None
-
-**Bot Permissions:** SEND_MESSAGES
-
-**Required Arguments:** N/A
-
-[Back to top](#ghostybot-command-list)
-
 ## bird
 
 **Category:** animal
@@ -1282,24 +1251,6 @@ Click Any
 **Category:** animal
 
 **Description:** Shows a picture of a bunny
-
-**Usage:** `N/A`
-
-**Aliases:** N/A
-
-**Member Permissions:** None
-
-**Bot Permissions:** SEND_MESSAGES
-
-**Required Arguments:** N/A
-
-[Back to top](#ghostybot-command-list)
-
-## camel
-
-**Category:** animal
-
-**Description:** Shows a picture of a camel
 
 **Usage:** `N/A`
 
@@ -1457,6 +1408,24 @@ Click Any
 
 [Back to top](#ghostybot-command-list)
 
+## kangaroo
+
+**Category:** animal
+
+**Description:** An image of a kangaroo
+
+**Usage:** `N/A`
+
+**Aliases:** N/A
+
+**Member Permissions:** None
+
+**Bot Permissions:** SEND_MESSAGES
+
+**Required Arguments:** N/A
+
+[Back to top](#ghostybot-command-list)
+
 ## koala
 
 **Category:** animal
@@ -1480,24 +1449,6 @@ Click Any
 **Category:** animal
 
 **Description:** Shows a picture of a lizard
-
-**Usage:** `N/A`
-
-**Aliases:** N/A
-
-**Member Permissions:** None
-
-**Bot Permissions:** SEND_MESSAGES
-
-**Required Arguments:** N/A
-
-[Back to top](#ghostybot-command-list)
-
-## llama
-
-**Category:** animal
-
-**Description:** Shows a picture of a llama
 
 **Usage:** `N/A`
 
@@ -1556,6 +1507,24 @@ Click Any
 **Usage:** `N/A`
 
 **Aliases:** N/A
+
+**Member Permissions:** None
+
+**Bot Permissions:** SEND_MESSAGES
+
+**Required Arguments:** N/A
+
+[Back to top](#ghostybot-command-list)
+
+## red-panda
+
+**Category:** animal
+
+**Description:** An image of a red panda
+
+**Usage:** `N/A`
+
+**Aliases:** `redpanda`
 
 **Member Permissions:** None
 
@@ -1652,6 +1621,24 @@ Click Any
 **Bot Permissions:** SEND_MESSAGES
 
 **Required Arguments:** N/A
+
+[Back to top](#ghostybot-command-list)
+
+## shell
+
+**Category:** botowner
+
+**Description:** Execute shell commands
+
+**Usage:** `N/A`
+
+**Aliases:** `cmd`
+
+**Member Permissions:** None
+
+**Bot Permissions:** SEND_MESSAGES
+
+**Required Arguments:** `code(string)`
 
 [Back to top](#ghostybot-command-list)
 
@@ -2683,6 +2670,24 @@ Click Any
 
 [Back to top](#ghostybot-command-list)
 
+## pikachu
+
+**Category:** image
+
+**Description:** An image of a pikachu
+
+**Usage:** `N/A`
+
+**Aliases:** N/A
+
+**Member Permissions:** None
+
+**Bot Permissions:** SEND_MESSAGES
+
+**Required Arguments:** N/A
+
+[Back to top](#ghostybot-command-list)
+
 ## poke
 
 **Category:** image
@@ -2752,6 +2757,24 @@ Click Any
 **Bot Permissions:** SEND_MESSAGES, ATTACH_FILES
 
 **Required Arguments:** `text(string)`
+
+[Back to top](#ghostybot-command-list)
+
+## threshold
+
+**Category:** image
+
+**Description:** threshold your avatar
+
+**Usage:** `N/A`
+
+**Aliases:** N/A
+
+**Member Permissions:** None
+
+**Bot Permissions:** SEND_MESSAGES
+
+**Required Arguments:** N/A
 
 [Back to top](#ghostybot-command-list)
 
@@ -3283,7 +3306,7 @@ Click Any
 
 **Description:** Remove your current reminder
 
-**Usage:** `N/A`
+**Usage:** `removereminder <id, 'last', 'first'>`
 
 **Aliases:** `delreminder`
 
@@ -4192,24 +4215,6 @@ Click Any
 **Bot Permissions:** SEND_MESSAGES
 
 **Required Arguments:** `query(string)`
-
-[Back to top](#ghostybot-command-list)
-
-## worldclock
-
-**Category:** util
-
-**Description:** Shows the time from other countries
-
-**Usage:** `N/A`
-
-**Aliases:** `clock`,`timezones`,`time`
-
-**Member Permissions:** None
-
-**Bot Permissions:** SEND_MESSAGES
-
-**Required Arguments:** N/A
 
 [Back to top](#ghostybot-command-list)
 

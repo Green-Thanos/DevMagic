@@ -1,7 +1,6 @@
 import { NextApiResponse } from "next";
 import hiddenItems from "../../../../data/hidden-items.json";
 import ApiRequest from "../../../../interfaces/ApiRequest";
-import { GuildData } from "../../../../models/Guild.model";
 
 export default async function handler(req: ApiRequest, res: NextApiResponse) {
   const { method, query } = req;
@@ -18,7 +17,7 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
       const guild = await req.bot.utils.handleApiRequest(
         `/guilds/${query.id}`,
         { type: "Bot", data: `${process.env["DISCORD_BOT_TOKEN"]}` },
-        "GET"
+        "GET",
       );
       const gChannels = await req.bot.utils.handleApiRequest(
         `/guilds/${query.id}/channels`,
@@ -26,7 +25,7 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
           type: "Bot",
           data: `${process.env["DISCORD_BOT_TOKEN"]}`,
         },
-        "GET"
+        "GET",
       );
 
       if (guild.error || guild.message) {
@@ -37,7 +36,8 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
         });
       }
 
-      const g: GuildData | undefined = await req.bot.utils.getGuildById(guild.id);
+      const g = await req.bot.utils.getGuildById(guild.id);
+
       if (!g) {
         return res.json({
           error: "An unexpected error occurred",
@@ -67,7 +67,7 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
       });
 
       return res.json({
-        guild: { ...guild, ...(g as any)._doc },
+        guild: { ...guild, ...g.toJSON() },
         botCommands: req.bot.commands.map((cmd) => cmd.name),
         status: "success",
       });
@@ -103,7 +103,7 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
             const starboard = req.bot.starboardsManager.starboards.find(
               (s) =>
                 s.channelID === g?.starboards_data?.channel_id &&
-                s.options.emoji === g?.starboards_data?.emoji
+                s.options.emoji === g?.starboards_data?.emoji,
             );
 
             await req.bot.utils.createStarboard(
@@ -117,7 +117,7 @@ export default async function handler(req: ApiRequest, res: NextApiResponse) {
               {
                 channelID: starboard?.channelID,
                 emoji: starboard?.options.emoji,
-              }
+              },
             );
           } catch (e) {
             req.bot.utils.sendErrorLog(e, "error");

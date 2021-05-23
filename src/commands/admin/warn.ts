@@ -1,4 +1,4 @@
-import { Message } from "discord.js";
+import { Message, Permissions } from "discord.js";
 import Command from "../../structures/Command";
 import Bot from "../../structures/Bot";
 
@@ -9,7 +9,7 @@ export default class WarnCommand extends Command {
       description: "Warns a user",
       category: "admin",
       usage: "<user>",
-      memberPermissions: ["MANAGE_GUILD"],
+      memberPermissions: [Permissions.FLAGS.MANAGE_GUILD],
       requiredArgs: [{ name: "user" }],
     });
   }
@@ -18,7 +18,7 @@ export default class WarnCommand extends Command {
     const lang = await bot.utils.getGuildLang(message.guild?.id);
     try {
       const member = await bot.utils.findMember(message, args);
-      const reason = args[0] || lang.GLOBAL.NOT_SPECIFIED;
+      const reason = args.slice(1).join(" ") || lang.GLOBAL.NOT_SPECIFIED;
 
       if (!member) {
         return message.channel.send(lang.ADMIN.PROVIDE_VALID_MEMBER);
@@ -39,7 +39,7 @@ export default class WarnCommand extends Command {
       return message.channel.send(
         lang.ADMIN.USER_WARNED.replace("{memberTag}", member.user.tag)
           .replace("{reason}", reason)
-          .replace("{warningsTotal}", warnings ? `${warnings.length}` : "0")
+          .replace("{warningsTotal}", warnings ? `${warnings.length}` : "0"),
       );
     } catch (err) {
       bot.utils.sendErrorLog(err, "error");

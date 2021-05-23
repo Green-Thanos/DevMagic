@@ -12,17 +12,14 @@ export default class PlayerTrackStarEvent extends Event {
     try {
       if (!message.guild?.available) return;
       const lang = await bot.utils.getGuildLang(message.guild?.id);
-  
+
       const embed = bot.utils
         .baseEmbed(message)
         .setTitle(`${lang.MUSIC.NOW_PLAYING} ${track.title}`)
         .setAuthor(`${lang.MUSIC.REQUESTED_BY} ${track.requestedBy.username}`)
         .setImage(track.thumbnail);
-  
-      const msg = await message.channel.send(embed);
-      setTimeout(() => {
-        msg?.delete();
-      }, track.durationMS);
+
+      return message.channel.send(embed);
     } catch (err) {
       bot.utils.sendErrorLog(err, "error");
     }

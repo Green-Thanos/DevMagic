@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from "discord.js";
+import { Message, MessageEmbed, Permissions } from "discord.js";
 import categories from "../../data/categories.json";
 import Command from "../../structures/Command";
 import Bot from "../../structures/Bot";
@@ -54,7 +54,7 @@ export default class HelpCommand extends Command {
         let cmd = commands.find((cmd) => cmd.name.toLowerCase() === cmdArgs.toLowerCase());
         if (!cmd)
           cmd = commands.find(
-            (cmd) => cmd.name.toLowerCase() === bot.aliases.get(cmdArgs.toLowerCase())
+            (cmd) => cmd.name.toLowerCase() === bot.aliases.get(cmdArgs.toLowerCase()),
           );
         if (!cmd) return message.channel.send(lang.HELP.CMD_NOT_FOUND);
 
@@ -69,7 +69,7 @@ export default class HelpCommand extends Command {
             bot.utils
               .baseEmbed(message)
               .setTitle(`${lang.HELP.COMMAND}: ${cmd.name}`)
-              .setDescription(`${lang.HELP.CUSTOM_CMD}`)
+              .setDescription(`${lang.HELP.CUSTOM_CMD}`),
           );
         }
 
@@ -81,15 +81,9 @@ export default class HelpCommand extends Command {
             ? cmd.options.options.map((option) => option)
             : lang.GLOBAL.NONE;
           cooldown = cmd.options.cooldown ? `${cmd.options.cooldown}s` : "3s";
-          memberPerms = !cmd.options.memberPermissions
-            ? lang.GLOBAL.NONE
-            : [...cmd.options.memberPermissions].map((p) => lang.PERMISSIONS[p.toUpperCase()]);
 
-          botPerms = !cmd.options.botPermissions
-            ? ["SEND_MESSAGES"].map((p) => lang.PERMISSIONS[p.toUpperCase()])
-            : [...cmd.options.botPermissions, "SEND_MESSAGES"].map(
-                (p) => lang.PERMISSIONS[p.toUpperCase()]
-              );
+          memberPerms = getMemberPermissions(cmd, lang);
+          botPerms = getBotPermissions(cmd, lang);
 
           const embed = bot.utils
             .baseEmbed(message)
@@ -100,13 +94,13 @@ export default class HelpCommand extends Command {
               cmd.options.usage
                 ? `${prefix}${cmd.name} ${cmd.options.usage}`
                 : lang.GLOBAL.NOT_SPECIFIED,
-              true
+              true,
             )
             .addField(lang.UTIL.CATEGORY, cmd.options.category, true)
             .addField(
               lang.UTIL.DESCRIPTION,
               cmd.options.description ? cmd.options.description : lang.GLOBAL.NOT_SPECIFIED,
-              true
+              true,
             )
             .addField(lang.HELP.OPTIONS, options, true)
             .addField(lang.HELP.BOT_PERMS, botPerms, true)
@@ -151,4 +145,38 @@ export default class HelpCommand extends Command {
   findCategory(cmd: Command | { name: string; category: string }): string {
     return "options" in cmd ? cmd.options.category : cmd.category;
   }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getMemberPermissions(command: Command, lang: any) {
+  return !command.options.memberPermissions
+    ? [lang.GLOBAL.NONE]
+    : [...command.options.memberPermissions].map((p) => {
+        const perms: string[] = [];
+
+        Object.keys(Permissions.FLAGS).map((key) => {
+          if (Permissions.FLAGS[key] === p) {
+            perms.push(lang.PERMISSIONS[key]);
+          }
+        });
+
+        return perms;
+      });
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getBotPermissions(command: Command, lang: any) {
+  return !command.options.botPermissions
+    ? ["SEND_MESSAGES"].map((p) => lang.PERMISSIONS[p.toUpperCase()])
+    : [...command.options.botPermissions, Permissions.FLAGS.SEND_MESSAGES].map((p) => {
+        const perms: string[] = [];
+
+        Object.keys(Permissions.FLAGS).map((key) => {
+          if (Permissions.FLAGS[key] === p) {
+            perms.push(lang.PERMISSIONS[key]);
+          }
+        });
+
+        return perms;
+      });
 }

@@ -26,8 +26,8 @@ export default class WikiCommand extends Command {
       const result = await wiki().page(search.results[0]);
       const description = await result.summary();
 
-      const title = (result as any).raw.title;
-      const url = (result as any).raw.fullurl;
+      const title = result.raw.title;
+      const url = result.raw.fullurl;
 
       const embed = bot.utils
         .baseEmbed(message)

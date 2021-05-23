@@ -3,6 +3,7 @@ import Event from "../../structures/Event";
 import BotModel from "../../models/Bot.model";
 import HelperHandler from "../../modules/HelperHandler";
 import FeatureHandler from "../../modules/FeatureHandler";
+import InteractionHandler from "../../modules/InteractionHandler";
 
 export default class ReadyEvent extends Event {
   constructor(bot: Bot) {
@@ -13,19 +14,20 @@ export default class ReadyEvent extends Event {
     const serverCount = bot.utils.formatNumber(bot.guilds.cache.size);
     const channelCount = bot.utils.formatNumber(bot.channels.cache.size);
     const userCount = bot.utils.formatNumber(
-      bot.guilds.cache.reduce((a, g) => a + g.memberCount, 0)
+      bot.guilds.cache.reduce((a, g) => a + g.memberCount, 0),
     );
     const statuses = [
       ` ${serverCount} servers.`,
       `!help || ${channelCount} channels`,
       `${userCount} users`,
-      "!help | https://ghostybot.tk",
+      "!help",
     ];
 
     new HelperHandler(bot).loadHelpers();
     new FeatureHandler(bot).loadFeatures();
+    new InteractionHandler(bot).loadInteractions();
 
-    if (process.env["DEV_MODE"] === true) {
+    if (process.env["DEV_MODE"] === "true") {
       import("../../scripts/generateCommandList").then((v) => v.default(bot));
     }
 
@@ -40,7 +42,7 @@ export default class ReadyEvent extends Event {
 
     bot.logger.log(
       "bot",
-      `Bot is running with ${channelCount} channels, ${userCount} users and ${serverCount} servers`
+      `Bot is running with ${channelCount} channels, ${userCount} users and ${serverCount} servers`,
     );
     setInterval(() => {
       const status = statuses[Math.floor(Math.random() * statuses.length)];
