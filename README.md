@@ -1,1 +1,1 @@
-Abandoned Project
+Note: This project was worked on extensively by me, but I ended up abandoning my version because it was pretty much unsavable. Contributing to the original inspo for this project was a better path. For my future self, this project has basically no features left to add. But many features can be improved and worked on. Please make docs and remix this later <3
