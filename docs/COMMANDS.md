@@ -1,6 +1,6 @@
 # Ghostybot Command list
 
-This command list was automatically generated in [this file](https://github.com/Dev-CasperTheGhost/ghostybot/tree/main/src/scripts/generateCommandList.ts).
+This command list was automatically generated in [this file](https://github.com/Green-Thanos/DevMagic/tree/main/src/scripts/generateCommandList.ts).
 Ghostybot has a total of 205 commands.
 
 Click any of the command names for more information

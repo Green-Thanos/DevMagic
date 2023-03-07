@@ -134,7 +134,7 @@ ${commands
 function writeToFile(detailedCommandList: string, notDetailedCommandList: string, length: number) {
   const DEFAULT = `# ${process.env["NEXT_PUBLIC_DASHBOARD_BOTNAME"]} Command list
 
-This command list was automatically generated in [this file](https://github.com/Dev-CasperTheGhost/ghostybot/tree/main/src/scripts/generateCommandList.ts).
+This command list was automatically generated in [this file](https://github.com/Green-Thanos/DevMagic/tree/main/src/scripts/generateCommandList.ts).
 ${process.env["NEXT_PUBLIC_DASHBOARD_BOTNAME"]} has a total of ${length} commands.
 
 Click any of the command names for more information

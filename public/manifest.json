@@ -1,6 +1,6 @@
 {
-    "short_name": "GhostyBot",
-    "name": "GhostyBot - Dashboard",
+    "short_name": "DevMagic",
+    "name": "Magic - Dashboard",
     "start_url": "/",
     "display": "standalone",
     "theme_color": "#7289da",

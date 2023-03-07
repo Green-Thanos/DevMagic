@@ -1,4 +1,4 @@
-# How to add a language to GhostyBot
+# How to add a language to GMagic
 
 1. Goto `src/locales/` And copy the `english.js` file
 2. Rename the copied file to the language (english name of the language)
