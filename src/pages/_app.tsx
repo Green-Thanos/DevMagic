@@ -24,7 +24,7 @@ Router.events.on("routeChangeStart", () => {
 Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
-function GhostyBot({ Component, pageProps }: AppProps) {
+function Magic({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -52,4 +52,4 @@ function GhostyBot({ Component, pageProps }: AppProps) {
   );
 }
 
-export default GhostyBot;
+export default Magic;

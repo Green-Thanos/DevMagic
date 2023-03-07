@@ -1,11 +1,5 @@
 # Getting Started
 
-**Only required if self-hosted/wanting to contribute**
-
-[Invite GhostyBot here](https://discord.com/oauth2/authorize?client_id=632843197600759809&scope=bot&permissions=8)
-
-How to install Ghostybot on your machine
-
 ## Requirements
 
 - [Discord bot token](https://discord.com/developers/applications)
@@ -38,7 +32,7 @@ _The .env list is not fully updated atm._
 
 ## Installation
 
-1. Clone the repo: `git clone https://github.com/Dev-CasperTheGhost/ghostybot`
+1. Clone the repo: `git clone https://github.com/Green-Thanos/DevMagic`
 2. Install all dependencies: `npm install`
 3. Rename `config.example.json` to `config.json`: `cp config.example.json config.json`
 4. Rename `.env.example` to `.env`: `Linux: cp .env.example .env`
@@ -47,7 +41,7 @@ _The .env list is not fully updated atm._
 7. Modify `config.json` where needed [more info about config.json](#configjson)
 8. Run `npm run build` to create the dashboard, if you have `enabled: false` for the dashboard, skip this step
 9. Run the bot: `npm start`
-   - Using pm2: `pm2 start src/index.js --name ghostybot`
+   - Using pm2: `pm2 start src/index.js --name Magic`
 
 ##
 
